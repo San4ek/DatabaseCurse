@@ -23,11 +23,15 @@ public class MenuController implements Initializable {
     @FXML
     private Button countriesButton;
 
+    @FXML
+    private Button typesButton;
+
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         brandsButton.setOnAction(actionEvent -> Scenes.BRAND.setScene((Stage) brandsButton.getScene().getWindow()));
         buyersButton.setOnAction(actionEvent -> Scenes.BUYERS.setScene((Stage) buyersButton.getScene().getWindow()));
         consultantsButton.setOnAction(actionEvent -> Scenes.CONSULTANTS.setScene((Stage) consultantsButton.getScene().getWindow()));
         countriesButton.setOnAction(actionEvent -> Scenes.COUNTRIES_OF_MANUFACTURE.setScene((Stage) countriesButton.getScene().getWindow()));
+        typesButton.setOnAction(actionEvent -> Scenes.TYPES_OF_GADGETS.setScene((Stage) typesButton.getScene().getWindow()));
     }
 }

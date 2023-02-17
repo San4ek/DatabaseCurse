@@ -20,4 +20,8 @@ public class TypeOfGadget {
     public String getType() {
         return Type;
     }
+
+    public void setID(int ID) {
+        this.ID = ID;
+    }
 }

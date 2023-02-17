@@ -1,10 +1,7 @@
 package org.example.Database.Classes.HandlerClasses;
 
-import org.example.Database.Classes.ClassesForDatabase.Buyer;
-import org.example.Database.Classes.ClassesForDatabase.Consultant;
-import org.example.Database.Classes.ClassesForDatabase.CountryOfManufacture;
+import org.example.Database.Classes.ClassesForDatabase.*;
 import org.example.Database.Enums.EnumsForDatabase.*;
-import org.example.Database.Classes.ClassesForDatabase.Brand;
 import org.example.Database.Enums.ConfigEnums.DatabaseConfigs;
 
 import java.lang.reflect.InvocationTargetException;
@@ -315,4 +312,74 @@ public class DatabaseHandler {
             e.printStackTrace();
         }
     }
+
+    public ResultSet selectTypes() {
+        comandString="SELECT * FROM "+Tables.TYPES_OF_GADGETS.getTitle();
+        try {
+            prSt= getConnection().prepareStatement(comandString);
+
+            resSet=prSt.executeQuery();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
+        return resSet;
+    }
+
+    public void deleteType(TypeOfGadget type) {
+        comandString="DELETE FROM "+Tables.TYPES_OF_GADGETS.getTitle()+" WHERE "+ TypesOfGadgets.ID.getTitle()+"=?";
+        try {
+            prSt= getConnection().prepareStatement(comandString);
+            prSt.setString(1, String.valueOf(type.getID()));
+
+            prSt.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public TypeOfGadget insertAndGetType(TypeOfGadget type) {
+        comandString = "INSERT INTO "+Tables.TYPES_OF_GADGETS.getTitle()+"("+ TypesOfGadgets.TYPE.getTitle()+") VALUES (?)";
+        try {
+            prSt = getConnection().prepareStatement(comandString);
+            prSt.setString(1, type.getType());
+            prSt.executeUpdate();
+
+            resSet=getTypeID(type);
+            resSet.next();
+            type.setID(resSet.getInt(1));
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return type;
+    }
+
+    private ResultSet getTypeID(TypeOfGadget type) {
+        comandString="SELECT * FROM "+Tables.TYPES_OF_GADGETS.getTitle()+" WHERE "+ TypesOfGadgets.TYPE.getTitle()+"=?";
+        try {
+            prSt = getConnection().prepareStatement(comandString);
+            prSt.setString(1, type.getType());
+
+            resSet=prSt.executeQuery();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return resSet;
+    }
+
+    public void updateType(TypeOfGadget type) {
+        comandString = "UPDATE "+Tables.TYPES_OF_GADGETS+" SET "+TypesOfGadgets.TYPE.getTitle()+"=? WHERE "+TypesOfGadgets.ID.getTitle()+"=?";
+        try {
+            prSt = getConnection().prepareStatement(comandString);
+            prSt.setString(1, type.getType());
+            prSt.setString(2, String.valueOf(type.getID()));
+
+            prSt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
 }

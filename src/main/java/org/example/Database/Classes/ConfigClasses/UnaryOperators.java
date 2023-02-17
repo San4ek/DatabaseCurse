@@ -13,6 +13,14 @@ public class UnaryOperators {
         return change;
     };
 
+    private static final UnaryOperator<TextFormatter.Change> typeValidationFormatter = change -> {
+        if ((!change.getText().matches("^[a-z]{0,20}$") || change.getControlText().length()==20) && !change.isDeleted()) {
+            change.setText("");
+            change.setRange(change.getRangeStart(),change.getRangeStart());
+        }
+        return change;
+    };
+
     private static final UnaryOperator<TextFormatter.Change> nameValidationFormatter = change -> {
         if ((!change.getText().matches("^[a-zA-Z]*$") || change.getControlText().length()==15) && !change.isDeleted()) {
             change.setText("");
@@ -51,5 +59,9 @@ public class UnaryOperators {
 
     public static UnaryOperator<TextFormatter.Change> getEmailValidationFormatter() {
         return emailValidationFormatter;
+    }
+
+    public static UnaryOperator<TextFormatter.Change> getTypeValidationFormatter() {
+        return typeValidationFormatter;
     }
 }
