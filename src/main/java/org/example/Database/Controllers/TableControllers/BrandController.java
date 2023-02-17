@@ -14,6 +14,7 @@ import javafx.stage.Stage;
 import org.example.Database.Classes.ClassesForDatabase.Brand;
 import org.example.Database.Classes.ConfigClasses.UnaryOperators;
 import org.example.Database.Classes.HandlerClasses.DatabaseHandler;
+import org.example.Database.Enums.EnumsForDatabase.Brands;
 import org.example.Database.Enums.EnumsForFX.Scenes;
 import org.example.Database.Interfaces.AddInformation;
 
@@ -25,8 +26,6 @@ import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.concurrent.atomic.AtomicReference;
 
-import static org.example.Database.Enums.EnumsForDatabase.Brands.BRAND;
-import static org.example.Database.Enums.EnumsForDatabase.Brands.ID;
 
 public class BrandController implements Initializable {
 
@@ -85,8 +84,8 @@ public class BrandController implements Initializable {
 
         flags.addListener((ListChangeListener<Boolean>) change -> addButton.setDisable(flags.contains(true)));
 
-        idColumn.setCellValueFactory(new PropertyValueFactory<>(ID.getFieldTitle()));
-        brandColumn.setCellValueFactory(new PropertyValueFactory<>(BRAND.getFieldTitle()));
+        idColumn.setCellValueFactory(new PropertyValueFactory<>(Brands.ID.getTitle()));
+        brandColumn.setCellValueFactory(new PropertyValueFactory<>(Brands.ID.getTitle()));
         deleteColumn.setCellValueFactory(param -> new ReadOnlyObjectWrapper<>(param.getValue()));
 
         deleteColumn.setCellFactory(param -> new TableCell<>() {

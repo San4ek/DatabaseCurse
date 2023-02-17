@@ -11,10 +11,6 @@ public enum Brands {
     }
 
     public String getTitle() {
-        return '`'+title+'`';
-    }
-
-    public String getFieldTitle() {
         return title;
     }
 

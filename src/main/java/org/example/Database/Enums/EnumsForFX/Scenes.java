@@ -11,7 +11,9 @@ import java.util.Objects;
 public enum Scenes {
     BRAND("Tables/Brands.fxml"),
     MENU("Menus/Menu.fxml"),
-    BUYERS("Tables/Buyers.fxml");
+    BUYERS("Tables/Buyers.fxml"),
+    CONSULTANTS("Tables/Consultants.fxml"),
+    COUNTRIES_OF_MANUFACTURE("Tables/CountriesOfManufacture.fxml");
 
     private String title;
 

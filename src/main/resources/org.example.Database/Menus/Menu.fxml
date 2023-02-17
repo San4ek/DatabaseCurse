@@ -15,4 +15,14 @@
          <Font size="36.0" />
       </font>
    </Button>
+   <Button fx:id="consultantsButton" layoutX="380.0" layoutY="14.0" mnemonicParsing="false" prefHeight="89.0" prefWidth="174.0" text="Consultants">
+      <font>
+         <Font size="36.0" />
+      </font>
+   </Button>
+   <Button fx:id="countriesButton" layoutX="14.0" layoutY="117.0" mnemonicParsing="false" prefHeight="89.0" prefWidth="174.0" text="Countries">
+      <font>
+         <Font size="36.0" />
+      </font>
+   </Button>
 </AnchorPane>

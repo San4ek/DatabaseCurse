@@ -2,7 +2,7 @@ package org.example.Database.Enums.EnumsForDatabase;
 
 public enum CountriesOfManufacture {
     ID("ID"),
-    Name("Name");
+    COUNTRY("Country");
 
     private String title;
 

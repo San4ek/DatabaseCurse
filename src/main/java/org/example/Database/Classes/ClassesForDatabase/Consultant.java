@@ -4,16 +4,16 @@ public class Consultant {
     private int ID;
     private final String Name;
     private final String Phone;
-    private final int rating;
+    private final double rating;
 
-    public Consultant(int ID, String name, String phone, int rating) {
+    public Consultant(int ID, String name, String phone, double rating) {
         this.ID = ID;
         Name = name;
         Phone = phone;
         this.rating = rating;
     }
 
-    public Consultant(String name, String phone, int rating) {
+    public Consultant(String name, String phone, double rating) {
         Name = name;
         Phone = phone;
         this.rating = rating;
@@ -31,7 +31,11 @@ public class Consultant {
         return Phone;
     }
 
-    public int getRating() {
+    public double getRating() {
         return rating;
+    }
+
+    public void setID(int ID) {
+        this.ID = ID;
     }
 }
