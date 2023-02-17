@@ -9,7 +9,7 @@ import java.io.IOException;
 import java.util.Objects;
 
 public enum Scenes {
-    BRAND("Tables/Brand.fxml"),
+    BRAND("Tables/Brands.fxml"),
     MENU("Menus/Menu.fxml"),
     BUYERS("Tables/Buyers.fxml");
 

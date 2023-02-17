@@ -146,19 +146,6 @@ public class DatabaseHandler {
         }
     }
 
-    public ResultSet getBuyersPhone() {
-        comandString="SELECT "+Buyers.PHONE+" FROM "+Tables.BUYERS.getTitle();
-        try {
-            prSt = getConnection().prepareStatement(comandString);
-
-            resSet=prSt.executeQuery();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
-        return resSet;
-    }
-
     public void updateBuyer(Buyer buyer) {
         comandString = "UPDATE "+Tables.BUYERS+" SET "+Buyers.NAME+"=?,"+Buyers.PHONE+"=?,"+Buyers.EMAIL+"=? WHERE "+Buyers.ID+"=?";
         try {
@@ -167,6 +154,19 @@ public class DatabaseHandler {
             prSt.setString(2,buyer.getPhone());
             prSt.setString(3,buyer.getEmail());
             prSt.setString(4, String.valueOf(buyer.getID()));
+
+            prSt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void updateBrand(Brand brand) {
+        comandString = "UPDATE "+Tables.BRANDS+" SET "+Brands.BRAND+"=? WHERE "+Brands.ID+"=?";
+        try {
+            prSt = getConnection().prepareStatement(comandString);
+            prSt.setString(1, brand.getBrand());
+            prSt.setString(4, String.valueOf(brand.getID()));
 
             prSt.executeUpdate();
         } catch (SQLException e) {

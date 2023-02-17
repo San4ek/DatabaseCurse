@@ -73,7 +73,6 @@ public class BuyersController implements Initializable {
 
     private final DatabaseHandler databaseHandler = new DatabaseHandler();
     private final ResultSet buyers = databaseHandler.selectBuyers();
-    private final ResultSet phones = databaseHandler.getBuyersPhone();
     private final ObservableList<Buyer> data = FXCollections.observableArrayList();
     private final ObservableList<Boolean> flags = FXCollections.observableArrayList();
     private final ArrayList<String> phoneList = new ArrayList<>();
@@ -84,14 +83,6 @@ public class BuyersController implements Initializable {
     public void initialize(URL url, ResourceBundle resourceBundle) {
 
         hideRstButton();
-
-        try {
-            while (phones.next()) {
-                phoneList.add(phones.getString(1));
-            }
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
 
         for (int i = 0; i < 3; ++i) {
             flags.add(true);
@@ -112,6 +103,7 @@ public class BuyersController implements Initializable {
                             buyers.getString(2),
                             buyers.getString(3),
                             buyers.getString(4)));
+                    phoneList.add(buyers.getString(3));
                 }
             } catch (SQLException e) {
                 throw new RuntimeException(e);
@@ -140,8 +132,8 @@ public class BuyersController implements Initializable {
                 setGraphic(deleteButton);
 
                 deleteButton.setOnAction(event -> {
-                    Runnable deleteBuyer = () -> databaseHandler.deleteBuyer(buyer);
-                    (new Thread(deleteBuyer)).start();
+                    (new Thread(() -> databaseHandler.deleteBuyer(buyer))).start();
+                    phoneList.remove(buyer.getPhone());
 
                     data.remove(buyer);
                 });
@@ -243,7 +235,7 @@ public class BuyersController implements Initializable {
             resetButton.setOnAction(actionEvent -> {
                 convertChgToAdd();
                 hideRstButton();
-                resetChanges(row);
+                resetChanges();
                 clearFields();
             });
 
@@ -252,8 +244,7 @@ public class BuyersController implements Initializable {
                     showRstButton();
                     rowDataBuyer = rowData;
                     addBuyerToFields(rowData);
-                    addBuyerToFields(rowData);
-                    prepareTableForChanges(rowData, row);
+                    prepareTableForChanges(rowData);
                     convertAddToChg(row);
                 }
             }));
@@ -270,15 +261,12 @@ public class BuyersController implements Initializable {
         } else messageLabel.setText(MessageConfig.NOT_APPROVED.getTitle());
     }
 
-    private void prepareTableForChanges(Buyer rowData, TableRow<Buyer> row) {
-        buyersTable.setItems(data);
-        row.setDisable(true);
+    private void prepareTableForChanges(Buyer rowData) {
         phoneList.remove(rowData.getPhone());
         flags.set(1, false);
     }
 
-    private void resetChanges(TableRow<Buyer> row) {
-        row.setDisable(false);
+    private void resetChanges() {
         phoneList.add(rowDataBuyer.getPhone());
         rowDataBuyer = null;
     }
