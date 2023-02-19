@@ -30,4 +30,14 @@
          <Font size="36.0" />
       </font>
    </Button>
+   <Button fx:id="gadgetsButton" layoutX="380.0" layoutY="117.0" mnemonicParsing="false" prefHeight="89.0" prefWidth="174.0" text="Gadgets">
+      <font>
+         <Font size="36.0" />
+      </font>
+   </Button>
+   <Button fx:id="providersButton" layoutX="14.0" layoutY="217.0" mnemonicParsing="false" prefHeight="89.0" prefWidth="174.0" text="Providers">
+      <font>
+         <Font size="36.0" />
+      </font>
+   </Button>
 </AnchorPane>

@@ -1,6 +1,6 @@
 package org.example.Database.Classes.ClassesForDatabase;
 
-import java.util.Date;
+import java.sql.Date;
 
 public class Purchase {
     private int ID;
@@ -10,7 +10,7 @@ public class Purchase {
     private final int Buyer;
     private final int Consultant;
 
-    public Purchase(int ID, int gadget, java.util.Date date, int payment, int buyer, int consultant) {
+    public Purchase(int ID, int gadget, Date date, int payment, int buyer, int consultant) {
         this.ID = ID;
         Gadget = gadget;
         Date = date;
@@ -19,7 +19,7 @@ public class Purchase {
         Consultant = consultant;
     }
 
-    public Purchase(int gadget, java.util.Date date, int payment, int buyer, int consultant) {
+    public Purchase(int gadget, Date date, int payment, int buyer, int consultant) {
         Gadget = gadget;
         Date = date;
         Payment = payment;
@@ -35,7 +35,7 @@ public class Purchase {
         return Gadget;
     }
 
-    public java.util.Date getDate() {
+    public Date getDate() {
         return Date;
     }
 

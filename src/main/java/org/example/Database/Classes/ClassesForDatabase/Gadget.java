@@ -5,7 +5,7 @@ public class Gadget {
     private final int Type;
     private final String Name;
     private final int Brand;
-    private final int CountryOfManufacture;
+    private final int Country;
     private final int Warranty;
     private final int ServiceLife;
     private final int Cost;
@@ -16,18 +16,18 @@ public class Gadget {
         Type = type;
         Name = name;
         Brand = brand;
-        CountryOfManufacture = countryOfManufacture;
+        Country = countryOfManufacture;
         Warranty = warranty;
         ServiceLife = serviceLife;
         Cost = cost;
         Provider = provider;
     }
 
-    public Gadget(int type, String name, int brand, int countryOfManufacture, int warranty, int serviceLife, int cost, int provider) {
+    public Gadget(int type, String name, int brand, int country, int warranty, int serviceLife, int cost, int provider) {
         Type = type;
         Name = name;
         Brand = brand;
-        CountryOfManufacture = countryOfManufacture;
+        Country = country;
         Warranty = warranty;
         ServiceLife = serviceLife;
         Cost = cost;
@@ -50,8 +50,8 @@ public class Gadget {
         return Brand;
     }
 
-    public int getCountryOfManufacture() {
-        return CountryOfManufacture;
+    public int getCountry() {
+        return Country;
     }
 
     public int getWarranty() {
@@ -68,5 +68,9 @@ public class Gadget {
 
     public int getProvider() {
         return Provider;
+    }
+
+    public void setID(int ID) {
+        this.ID = ID;
     }
 }

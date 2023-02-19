@@ -1,15 +1,15 @@
 package org.example.Database.Classes.ClassesForDatabase;
 
-public class CountryOfManufacture {
+public class Country {
     private int ID;
     private final String Country;
 
-    public CountryOfManufacture(int ID, String name) {
+    public Country(int ID, String name) {
         this.ID = ID;
         Country = name;
     }
 
-    public CountryOfManufacture(String name) {
+    public Country(String name) {
         Country = name;
     }
 
@@ -23,5 +23,10 @@ public class CountryOfManufacture {
 
     public void setID(int ID) {
         this.ID = ID;
+    }
+
+    @Override
+    public String toString() {
+        return ID+" "+Country;
     }
 }

@@ -4,11 +4,11 @@ public enum Tables {
     BRANDS("brands"),
     BUYERS("buyers"),
     CONSULTANTS("consultants"),
-    COUNTRIES_OF_MANUFACTURE("countries of manufacture"),
+    COUNTRIES("countries"),
     GADGETS("gadgets"),
     PROVIDERS("providers"),
     PURCHASES("purchases"),
-    TYPES_OF_GADGETS("types of gadgets");
+    TYPES("types");
 
     private String title;
 

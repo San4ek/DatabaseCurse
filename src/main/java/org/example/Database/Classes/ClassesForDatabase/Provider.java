@@ -3,23 +3,23 @@ package org.example.Database.Classes.ClassesForDatabase;
 public class Provider {
     private int ID;
     private final String Name;
-    private final int Phone;
+    private final String Phone;
     private final String Email;
-    private final String Address;
+    private final int Country;
 
-    public Provider(int ID, String name, int phone, String email, String address) {
+    public Provider(int ID, String name, String phone, String email, int country) {
         this.ID = ID;
         Name = name;
         Phone = phone;
         Email = email;
-        Address = address;
+        Country = country;
     }
 
-    public Provider(String name, int phone, String email, String address) {
+    public Provider(String name, String phone, String email, int country) {
         Name = name;
         Phone = phone;
         Email = email;
-        Address = address;
+        Country = country;
     }
 
     public int getID() {
@@ -30,7 +30,7 @@ public class Provider {
         return Name;
     }
 
-    public int getPhone() {
+    public String getPhone() {
         return Phone;
     }
 
@@ -38,7 +38,16 @@ public class Provider {
         return Email;
     }
 
-    public String getAddress() {
-        return Address;
+    public int getCountry() {
+        return Country;
+    }
+
+    public void setID(int ID) {
+        this.ID = ID;
+    }
+
+    @Override
+    public String toString() {
+        return ID +" "+ Name;
     }
 }

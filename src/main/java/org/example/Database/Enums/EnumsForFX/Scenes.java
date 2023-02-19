@@ -13,8 +13,10 @@ public enum Scenes {
     MENU("Menus/Menu.fxml"),
     BUYERS("Tables/Buyers.fxml"),
     CONSULTANTS("Tables/Consultants.fxml"),
-    COUNTRIES_OF_MANUFACTURE("Tables/CountriesOfManufacture.fxml"),
-    TYPES_OF_GADGETS("Tables/TypesOfGadgets.fxml");
+    COUNTRIES("Tables/Countries.fxml"),
+    TYPES_OF_GADGETS("Tables/TypesOfGadgets.fxml"),
+    GADGETS("Tables/Gadgets.fxml"),
+    PROVIDERS("Tables/Providers.fxml");
 
     private String title;
 

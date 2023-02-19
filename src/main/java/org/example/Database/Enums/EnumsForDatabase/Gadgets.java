@@ -5,9 +5,9 @@ public enum Gadgets {
     TYPE("Type"),
     NAME("Name"),
     BRAND("Brand"),
-    COUNTRY_OF_MANUFACTURE("CountryOfManufacture"),
+    COUNTRY_OF_MANUFACTURE("Country"),
     WARRANTY("Warranty"),
-    SERVICE_LIFE("Service life"),
+    SERVICE_LIFE("ServiceLife"),
     COST("Cost"),
     PROVIDER("Provider");
 

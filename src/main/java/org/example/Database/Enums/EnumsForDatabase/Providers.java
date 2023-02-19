@@ -5,7 +5,7 @@ public enum Providers {
     NAME("Name"),
     PHONE_NUMBER("Phone"),
     EMAIL("Email"),
-    ADDRESS("Address");
+    COUNTRY("Country");
 
     private String title;
 
