@@ -559,4 +559,82 @@ public class DatabaseHandler {
             e.printStackTrace();
         }
     }
+
+    public ResultSet selectPurchases() {
+        comandString="SELECT * FROM "+Tables.PURCHASES.getTitle();
+        try {
+            prSt= getConnection().prepareStatement(comandString);
+
+            resSet=prSt.executeQuery();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
+        return resSet;
+    }
+
+    public void deletePurchase(Purchase purchase) {
+        comandString="DELETE FROM "+Tables.PURCHASES.getTitle()+" WHERE "+ Purchases.ID.getTitle()+"=?";
+        try {
+            prSt= getConnection().prepareStatement(comandString);
+            prSt.setString(1, String.valueOf(purchase.getID()));
+
+            prSt.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public Purchase insertAndGetPurchase(Purchase purchase) {
+        comandString = "INSERT INTO "+Tables.PURCHASES.getTitle()+"("+Purchases.GADGET.getTitle()+","+
+                Purchases.DATE.getTitle()+","+
+                Purchases.PAYMENT.getTitle()+","+
+                Purchases.BUYER.getTitle()+","+
+                Purchases.CONSULTANT.getTitle()+") VALUES (?,?,?,?,?)";
+        try {
+            prSt = getConnection().prepareStatement(comandString);
+            prSt.setString(1, String.valueOf(purchase.getGadget()));
+            prSt.setString(2, String.valueOf(purchase.getDate()));
+            prSt.setString(3, String.valueOf(purchase.getPayment()));
+            prSt.setString(4, String.valueOf(purchase.getBuyer()));
+            prSt.setString(5, String.valueOf(purchase.getConsultant()));
+            prSt.executeUpdate();
+
+            resSet=insertPurchaseID(purchase);
+            resSet.afterLast();
+            resSet.previous();
+            purchase.setID(resSet.getInt(1));
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return purchase;
+    }
+
+    private ResultSet insertPurchaseID(Purchase purchase) {
+        comandString="SELECT * FROM "+Tables.PURCHASES.getTitle()+" WHERE "+ Purchases.DATE.getTitle()+"=?";
+        try {
+            prSt = getConnection().prepareStatement(comandString);
+            prSt.setString(1, String.valueOf(purchase.getDate()));
+
+            resSet=prSt.executeQuery();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return resSet;
+    }
+
+    public ResultSet selectPayments() {
+        comandString="SELECT * FROM "+Tables.PAYMENTS.getTitle();
+        try {
+            prSt= getConnection().prepareStatement(comandString);
+
+            resSet=prSt.executeQuery();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
+        return resSet;
+    }
 }

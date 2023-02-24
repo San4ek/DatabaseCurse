@@ -26,7 +26,7 @@ import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.concurrent.atomic.AtomicReference;
 
-public class ConsultantController implements Initializable {
+public class ConsultantsController implements Initializable {
 
     @FXML
     private Button addButton;

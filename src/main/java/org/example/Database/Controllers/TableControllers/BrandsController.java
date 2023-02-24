@@ -27,7 +27,7 @@ import java.util.ResourceBundle;
 import java.util.concurrent.atomic.AtomicReference;
 
 
-public class BrandController implements Initializable {
+public class BrandsController implements Initializable {
 
     private final ObservableList<Brand> data = FXCollections.observableArrayList();
     private final DatabaseHandler databaseHandler = new DatabaseHandler();

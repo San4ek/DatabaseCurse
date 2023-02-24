@@ -16,7 +16,9 @@ public enum Scenes {
     COUNTRIES("Tables/Countries.fxml"),
     TYPES_OF_GADGETS("Tables/TypesOfGadgets.fxml"),
     GADGETS("Tables/Gadgets.fxml"),
-    PROVIDERS("Tables/Providers.fxml");
+    PROVIDERS("Tables/Providers.fxml"),
+    PAYMENT("Tables/Payment.fxml"),
+    PURCHASES("Tables/Purchases.fxml");
 
     private String title;
 

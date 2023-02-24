@@ -3,9 +3,9 @@ package org.example.Database.Classes.ClassesForDatabase;
 public class Provider {
     private int ID;
     private final String Name;
-    private final String Phone;
-    private final String Email;
-    private final int Country;
+    private String Phone;
+    private String Email;
+    private int Country;
 
     public Provider(int ID, String name, String phone, String email, int country) {
         this.ID = ID;
@@ -20,6 +20,11 @@ public class Provider {
         Phone = phone;
         Email = email;
         Country = country;
+    }
+
+    public Provider(int ID, String name) {
+        this.ID=ID;
+        Name=name;
     }
 
     public int getID() {

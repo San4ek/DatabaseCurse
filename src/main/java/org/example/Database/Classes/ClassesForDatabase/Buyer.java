@@ -19,6 +19,11 @@ public class Buyer {
         Email = email;
     }
 
+    public Buyer(int ID, String name) {
+        this.ID=ID;
+        Name = name;
+    }
+
     public int getID() {
         return ID;
     }
@@ -49,5 +54,10 @@ public class Buyer {
 
     public void setEmail(String email) {
         Email = email;
+    }
+
+    @Override
+    public String toString() {
+        return ID+" "+Name;
     }
 }

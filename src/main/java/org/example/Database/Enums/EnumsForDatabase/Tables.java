@@ -8,7 +8,8 @@ public enum Tables {
     GADGETS("gadgets"),
     PROVIDERS("providers"),
     PURCHASES("purchases"),
-    TYPES("types");
+    TYPES("types"),
+    PAYMENTS("payments");
 
     private String title;
 

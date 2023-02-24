@@ -6,7 +6,7 @@
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.Database.Controllers.TableControllers.BrandController">
+<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.Database.Controllers.TableControllers.BrandsController">
     <TableView fx:id="brandTable" layoutX="159.0" layoutY="75.0" prefHeight="200.0" prefWidth="274.0">
       <columns>
           <TableColumn fx:id="idColumn" prefWidth="59.20001220703125" text="ID" />

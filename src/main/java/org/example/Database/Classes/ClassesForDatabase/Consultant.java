@@ -3,8 +3,8 @@ package org.example.Database.Classes.ClassesForDatabase;
 public class Consultant {
     private int ID;
     private final String Name;
-    private final String Phone;
-    private final double rating;
+    private String Phone;
+    private double rating;
 
     public Consultant(int ID, String name, String phone, double rating) {
         this.ID = ID;
@@ -17,6 +17,11 @@ public class Consultant {
         Name = name;
         Phone = phone;
         this.rating = rating;
+    }
+
+    public Consultant(int ID, String name) {
+        this.ID=ID;
+        Name=name;
     }
 
     public int getID() {
@@ -37,5 +42,10 @@ public class Consultant {
 
     public void setID(int ID) {
         this.ID = ID;
+    }
+
+    @Override
+    public String toString() {
+        return ID+" "+Name;
     }
 }
