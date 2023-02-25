@@ -54,7 +54,7 @@ public class TypesOfGadgetsController implements Initializable {
 
     private final ArrayList<String> typeList = new ArrayList<>();
     private TypeOfGadget rowDataType = null;
-    private final ObservableList<Boolean> flags = FXCollections.observableArrayList();
+    private final ObservableList<Boolean> flagsOnSearch = FXCollections.observableArrayList();
     private final ObservableList<TypeOfGadget> data = FXCollections.observableArrayList();
     private final DatabaseHandler databaseHandler = new DatabaseHandler();
     private final ResultSet types = databaseHandler.selectTypes();
@@ -63,7 +63,7 @@ public class TypesOfGadgetsController implements Initializable {
     public void initialize(URL url, ResourceBundle resourceBundle) {
         hideRstButton();
 
-        flags.add(true);
+        flagsOnSearch.add(true);
 
         AddInformation<ResultSet, ObservableList<TypeOfGadget>> information=(types, data) -> {
             try {
@@ -77,7 +77,7 @@ public class TypesOfGadgetsController implements Initializable {
         };
         information.addInf(types,data);
 
-        flags.addListener((ListChangeListener<Boolean>) change -> addButton.setDisable(flags.contains(true)));
+        flagsOnSearch.addListener((ListChangeListener<Boolean>) change -> addButton.setDisable(flagsOnSearch.contains(true)));
 
         idColumn.setCellValueFactory(new PropertyValueFactory<>(TypesOfGadgets.ID.getTitle()));
         typeColumn.setCellValueFactory(new PropertyValueFactory<>(TypesOfGadgets.TYPE.getTitle()));
@@ -112,14 +112,16 @@ public class TypesOfGadgetsController implements Initializable {
 
         FilteredList<TypeOfGadget> filteredData = new FilteredList<>(data, b -> true);
 
-        AtomicReference<String> countryString = new AtomicReference<>("");
+        AtomicReference<String> typeString = new AtomicReference<>("");
 
         typeField.textProperty().addListener((observable, oldValue, newValue) -> {
 
-            flags.set(0, newValue == null || newValue.isEmpty()|| typeList.contains(newValue));
+            typeString.set(newValue);
+
+            flagsOnSearch.set(0, typeString.get() == null || typeList.contains(typeString.get()));
 
             if (rowDataType != null) {
-                addButton.setDisable(rowDataType.getType().equals(countryString.get()) || flags.contains(true));
+                addButton.setDisable(rowDataType.getType().equals(typeString.get()) || flagsOnSearch.contains(true));
             }
 
             filteredData.setPredicate(type -> {
@@ -167,12 +169,12 @@ public class TypesOfGadgetsController implements Initializable {
         addButton.setText("Chg");
         addButton.setDisable(true);
         addButton.setOnAction(actionEvent -> {
-            deleteBuyerInf();
+            deleteTypeInf();
             onChangeEvent(new TypeOfGadget(rowDataType.getID(), typeField.getText()));
         });
     }
 
-    private void deleteBuyerInf() {
+    private void deleteTypeInf() {
         data.remove(rowDataType);
     }
 
@@ -188,7 +190,7 @@ public class TypesOfGadgetsController implements Initializable {
 
     private void prepareTableForChanges(TypeOfGadget rowData) {
         typeList.remove(rowData.getType());
-        flags.set(0, false);
+        flagsOnSearch.setAll(false);
     }
 
     private void clearField() {

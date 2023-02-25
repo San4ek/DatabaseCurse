@@ -2,7 +2,7 @@ package org.example.Database.Enums.ConfigEnums;
 
 public enum ServerConfigs {
     PATH("/approving"),
-    LINK("https://fbbf-46-216-119-61.eu.ngrok.io"),
+    LINK("https://fa13-46-216-119-29.eu.ngrok.io"),
     GOAL("Approving");
 
     private final String title;

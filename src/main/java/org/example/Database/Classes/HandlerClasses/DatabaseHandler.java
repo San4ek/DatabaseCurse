@@ -425,7 +425,7 @@ public class DatabaseHandler {
             prSt.setString(5, String.valueOf(gadget.getWarranty()));
             prSt.setString(6, String.valueOf(gadget.getServiceLife()));
             prSt.setString(7, String.valueOf(gadget.getCost()));
-            prSt.setString(8, String.valueOf(gadget.getType()));
+            prSt.setString(8, String.valueOf(gadget.getProvider()));
             prSt.executeUpdate();
 
             resSet=getGadgetID(gadget);
@@ -636,5 +636,61 @@ public class DatabaseHandler {
         }
 
         return resSet;
+    }
+
+    public void deletePayment(Payment payment) {
+        comandString="DELETE FROM "+Tables.PAYMENTS.getTitle()+" WHERE "+ Payments.ID.getTitle()+"=?";
+        try {
+            prSt= getConnection().prepareStatement(comandString);
+            prSt.setString(1, String.valueOf(payment.getID()));
+
+            prSt.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public Payment insertAndGetPayment(Payment payment) {
+        comandString = "INSERT INTO "+Tables.PAYMENTS.getTitle()+"("+Payments.PAYMENT.getTitle()+") VALUES (?)";
+        try {
+            prSt = getConnection().prepareStatement(comandString);
+            prSt.setString(1,payment.getPayment());
+            prSt.executeUpdate();
+
+            resSet=insertPaymentID(payment);
+            resSet.next();
+            payment.setID(resSet.getInt(1));
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return payment;
+    }
+
+    private ResultSet insertPaymentID(Payment payment) {
+        comandString="SELECT * FROM "+Tables.PAYMENTS.getTitle()+" WHERE "+ Payments.PAYMENT.getTitle()+"=?";
+        try {
+            prSt = getConnection().prepareStatement(comandString);
+            prSt.setString(1, payment.getPayment());
+
+            resSet=prSt.executeQuery();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return resSet;
+    }
+
+    public void updatePayment(Payment payment) {
+        comandString = "UPDATE "+Tables.PAYMENTS.getTitle()+" SET "+
+                Payments.PAYMENT.getTitle()+"=? WHERE "+Payments.ID.getTitle()+"=?";
+        try {
+            prSt = getConnection().prepareStatement(comandString);
+            prSt.setString(1, payment.getPayment());
+
+            prSt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 }
