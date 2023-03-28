@@ -1,0 +1,20 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="Database:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/Database_jar</output-path>
+    <root id="archive" name="Database.jar">
+      <element id="module-output" name="Database" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/../../../../Jars for Java/javax.mail.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/../../../../Jars for Java/smtp-1.4.4.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/../../../../Jars for Java/activation-1.1.1.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/../../../../Jars for Java/openjfx-17.0.2_windows-x64_bin-sdk/javafx-sdk-17.0.2/lib/javafx-swt.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/../../../../Jars for Java/openjfx-17.0.2_windows-x64_bin-sdk/javafx-sdk-17.0.2/lib/javafx.web.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/../../../../Jars for Java/openjfx-17.0.2_windows-x64_bin-sdk/javafx-sdk-17.0.2/lib/javafx.base.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/../../../../Jars for Java/openjfx-17.0.2_windows-x64_bin-sdk/javafx-sdk-17.0.2/lib/javafx.fxml.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/../../../../Jars for Java/openjfx-17.0.2_windows-x64_bin-sdk/javafx-sdk-17.0.2/lib/javafx.media.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/../../../../Jars for Java/openjfx-17.0.2_windows-x64_bin-sdk/javafx-sdk-17.0.2/lib/javafx.swing.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/../../../../Jars for Java/openjfx-17.0.2_windows-x64_bin-sdk/javafx-sdk-17.0.2/lib/javafx.controls.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/../../../../Jars for Java/openjfx-17.0.2_windows-x64_bin-sdk/javafx-sdk-17.0.2/lib/javafx.graphics.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/../../../../Jars for Java/Connector J 8.0/mysql-connector-java-8.0.28.jar" path-in-jar="/" />
+    </root>
+  </artifact>
+</component>

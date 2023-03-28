@@ -9,7 +9,7 @@ import org.example.Database.Enums.EnumsForFX.Scenes;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-public class MenuController implements Initializable {
+public class TablesMenuController implements Initializable {
 
     @FXML
     private Button brandsButton;
@@ -38,8 +38,12 @@ public class MenuController implements Initializable {
     @FXML
     private Button paymentsButton;
 
+    @FXML
+    private Button backButton;
+
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        backButton.setOnAction(actionEvent -> Scenes.MAIN_MENU.setScene((Stage) backButton.getScene().getWindow()));
         brandsButton.setOnAction(actionEvent -> Scenes.BRAND.setScene((Stage) brandsButton.getScene().getWindow()));
         buyersButton.setOnAction(actionEvent -> Scenes.BUYERS.setScene((Stage) buyersButton.getScene().getWindow()));
         consultantsButton.setOnAction(actionEvent -> Scenes.CONSULTANTS.setScene((Stage) consultantsButton.getScene().getWindow()));

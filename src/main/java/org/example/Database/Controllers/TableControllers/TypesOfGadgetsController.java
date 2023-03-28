@@ -108,7 +108,7 @@ public class TypesOfGadgetsController implements Initializable {
             }
         });
 
-        backButton.setOnAction(actionEvent -> Scenes.MENU.setScene((Stage) backButton.getScene().getWindow()));
+        backButton.setOnAction(actionEvent -> Scenes.TABLES_MENU.setScene((Stage) backButton.getScene().getWindow()));
 
         addButton.setOnAction(actionEvent -> onAddEvent());
 

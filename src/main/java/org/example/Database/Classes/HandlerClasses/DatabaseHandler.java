@@ -574,11 +574,11 @@ public class DatabaseHandler {
         return resSet;
     }
 
-    public void deletePurchase(Purchase purchase) {
+    public void deletePurchase(PurchaseTable purchaseTable) {
         comandString="DELETE FROM "+Tables.PURCHASES.getTitle()+" WHERE "+ Purchases.ID.getTitle()+"=?";
         try {
             prSt= getConnection().prepareStatement(comandString);
-            prSt.setString(1, String.valueOf(purchase.getID()));
+            prSt.setString(1, String.valueOf(purchaseTable.getID()));
 
             prSt.executeUpdate();
         } catch (SQLException e) {
@@ -586,7 +586,7 @@ public class DatabaseHandler {
         }
     }
 
-    public Purchase insertAndGetPurchase(Purchase purchase) {
+    public PurchaseTable insertAndGetPurchase(PurchaseTable purchaseTable) {
         comandString = "INSERT INTO "+Tables.PURCHASES.getTitle()+"("+Purchases.GADGET.getTitle()+","+
                 Purchases.DATE.getTitle()+","+
                 Purchases.PAYMENT.getTitle()+","+
@@ -594,29 +594,29 @@ public class DatabaseHandler {
                 Purchases.CONSULTANT.getTitle()+") VALUES (?,?,?,?,?)";
         try {
             prSt = getConnection().prepareStatement(comandString);
-            prSt.setString(1, String.valueOf(purchase.getGadget()));
-            prSt.setString(2, String.valueOf(purchase.getDate()));
-            prSt.setString(3, String.valueOf(purchase.getPayment()));
-            prSt.setString(4, String.valueOf(purchase.getBuyer()));
-            prSt.setString(5, String.valueOf(purchase.getConsultant()));
+            prSt.setString(1, String.valueOf(purchaseTable.getGadget()));
+            prSt.setString(2, String.valueOf(purchaseTable.getDate()));
+            prSt.setString(3, String.valueOf(purchaseTable.getPayment()));
+            prSt.setString(4, String.valueOf(purchaseTable.getBuyer()));
+            prSt.setString(5, String.valueOf(purchaseTable.getConsultant()));
             prSt.executeUpdate();
 
-            resSet=insertPurchaseID(purchase);
+            resSet=insertPurchaseID(purchaseTable);
             resSet.afterLast();
             resSet.previous();
-            purchase.setID(resSet.getInt(1));
+            purchaseTable.setID(resSet.getInt(1));
         } catch (SQLException e) {
             e.printStackTrace();
         }
 
-        return purchase;
+        return purchaseTable;
     }
 
-    private ResultSet insertPurchaseID(Purchase purchase) {
+    private ResultSet insertPurchaseID(PurchaseTable purchaseTable) {
         comandString="SELECT * FROM "+Tables.PURCHASES.getTitle()+" WHERE "+ Purchases.DATE.getTitle()+"=?";
         try {
             prSt = getConnection().prepareStatement(comandString);
-            prSt.setString(1, String.valueOf(purchase.getDate()));
+            prSt.setString(1, String.valueOf(purchaseTable.getDate()));
 
             resSet=prSt.executeQuery();
         } catch (SQLException e) {

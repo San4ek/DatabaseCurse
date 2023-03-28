@@ -10,7 +10,9 @@ import java.util.Objects;
 
 public enum Scenes {
     BRAND("Tables/Brands.fxml"),
-    MENU("Menus/Menu.fxml"),
+    MAIN_MENU("Menus/MainMenu.fxml"),
+    TABLES_MENU("Menus/TablesMenu.fxml"),
+    VIEWS_MENU("Menus/ViewsMenu.fxml"),
     BUYERS("Tables/Buyers.fxml"),
     CONSULTANTS("Tables/Consultants.fxml"),
     COUNTRIES("Tables/Countries.fxml"),
@@ -18,7 +20,9 @@ public enum Scenes {
     GADGETS("Tables/Gadgets.fxml"),
     PROVIDERS("Tables/Providers.fxml"),
     PAYMENTS("Tables/Payments.fxml"),
-    PURCHASES("Tables/Purchases.fxml");
+    PURCHASES("Tables/Purchases.fxml"),
+    GADGETS_VIEW("Views/GadgetsView.fxml"),
+    PURCHASES_VIEW("Views/PurchasesView.fxml");
 
     private String title;
 
