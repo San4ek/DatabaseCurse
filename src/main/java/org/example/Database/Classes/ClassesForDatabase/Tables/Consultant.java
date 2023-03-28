@@ -1,8 +1,8 @@
-package org.example.Database.Classes.ClassesForDatabase;
+package org.example.Database.Classes.ClassesForDatabase.Tables;
 
 public class Consultant {
     private int ID;
-    private final String Name;
+    private String Name;
     private String Phone;
     private double rating;
 
@@ -42,6 +42,18 @@ public class Consultant {
 
     public void setID(int ID) {
         this.ID = ID;
+    }
+
+    public void setName(String name) {
+        Name = name;
+    }
+
+    public void setPhone(String phone) {
+        Phone = phone;
+    }
+
+    public void setRating(double rating) {
+        this.rating = rating;
     }
 
     @Override

@@ -1,8 +1,8 @@
-package org.example.Database.Classes.ClassesForDatabase;
+package org.example.Database.Classes.ClassesForDatabase.Tables;
 
 public class Provider {
     private int ID;
-    private final String Name;
+    private String Name;
     private String Phone;
     private String Email;
     private int Country;
@@ -49,6 +49,22 @@ public class Provider {
 
     public void setID(int ID) {
         this.ID = ID;
+    }
+
+    public void setPhone(String phone) {
+        Phone = phone;
+    }
+
+    public void setEmail(String email) {
+        Email = email;
+    }
+
+    public void setCountry(int country) {
+        Country = country;
+    }
+
+    public void setName(String name) {
+        Name = name;
     }
 
     @Override

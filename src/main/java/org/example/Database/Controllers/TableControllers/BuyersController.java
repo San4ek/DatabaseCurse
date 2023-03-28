@@ -11,14 +11,14 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
-import org.example.Database.Classes.ClassesForDatabase.Buyer;
+import org.example.Database.Classes.ClassesForDatabase.Tables.Buyer;
 import org.example.Database.Classes.ConfigClasses.UnaryOperators;
 import org.example.Database.Classes.HandlerClasses.DatabaseHandler;
 import org.example.Database.Classes.HandlerClasses.EmailMessage;
 import org.example.Database.Classes.HandlerClasses.WebServer;
 import org.example.Database.Enums.ConfigEnums.MessageConfig;
 import org.example.Database.Enums.ConfigEnums.ServerConfigs;
-import org.example.Database.Enums.EnumsForDatabase.Buyers;
+import org.example.Database.Enums.EnumsForDatabase.Tables.Buyers;
 import org.example.Database.Enums.EnumsForFX.Scenes;
 import org.example.Database.Interfaces.AddInformation;
 
@@ -74,7 +74,9 @@ public class BuyersController implements Initializable {
     private final DatabaseHandler databaseHandler = new DatabaseHandler();
     private final ResultSet buyers = databaseHandler.selectBuyers();
     private final ObservableList<Buyer> data = FXCollections.observableArrayList();
-    private final ObservableList<Boolean> flags = FXCollections.observableArrayList();
+    private final ObservableList<Boolean> flagsOnSearch = FXCollections.observableArrayList();
+    private final ObservableList<Boolean> flagsOnChange = FXCollections.observableArrayList();
+
     private final ArrayList<String> phoneList = new ArrayList<>();
 
     private Buyer rowDataBuyer = null;
@@ -85,16 +87,9 @@ public class BuyersController implements Initializable {
         hideRstButton();
 
         for (int i = 0; i < 3; ++i) {
-            flags.add(true);
+            flagsOnSearch.add(true);
+            flagsOnChange.add(false);
         }
-
-        flags.addListener((ListChangeListener<Boolean>) change -> addButton.setDisable(flags.contains(true)));
-
-        addButton.setDisable(true);
-
-        backButton.setOnAction(actionEvent -> Scenes.MENU.setScene((Stage) backButton.getScene().getWindow()));
-
-        addButton.setOnAction(actionEvent -> onAddEvent());
 
         AddInformation<ResultSet, ObservableList<Buyer>> information = (buyers, data) -> {
             try {
@@ -111,10 +106,21 @@ public class BuyersController implements Initializable {
         };
         information.addInf(buyers, data);
 
+        flagsOnSearch.addListener((ListChangeListener<Boolean>) change -> addButton.setDisable(flagsOnChange.contains(true) || flagsOnSearch.contains(true)));
+        flagsOnChange.addListener((ListChangeListener<Boolean>) change -> addButton.setDisable(flagsOnChange.contains(true) || flagsOnSearch.contains(true)));
+
+        backButton.setOnAction(actionEvent -> Scenes.MENU.setScene((Stage) backButton.getScene().getWindow()));
+
+        addButton.setOnAction(actionEvent -> onAddEvent());
+
         idColumn.setCellValueFactory(new PropertyValueFactory<>(Buyers.ID.getTitle()));
+
         nameColumn.setCellValueFactory(new PropertyValueFactory<>(Buyers.NAME.getTitle()));
+
         phoneColumn.setCellValueFactory(new PropertyValueFactory<>(Buyers.PHONE.getTitle()));
+
         emailColumn.setCellValueFactory(new PropertyValueFactory<>(Buyers.EMAIL.getTitle()));
+
         deleteColumn.setCellValueFactory(param -> new ReadOnlyObjectWrapper<>(param.getValue()));
 
         deleteColumn.setCellFactory(param -> new TableCell<>() {
@@ -140,8 +146,6 @@ public class BuyersController implements Initializable {
             }
         });
 
-        buyersTable.setItems(data);
-
         FilteredList<Buyer> filteredData = new FilteredList<>(data, b -> true);
 
         AtomicReference<String> nameString = new AtomicReference<>("");
@@ -150,26 +154,22 @@ public class BuyersController implements Initializable {
 
         nameField.setTextFormatter(new TextFormatter<>(UnaryOperators.getNameValidationFormatter()));
         nameField.textProperty().addListener((observable, oldValue, newValue) -> {
+
             nameString.set(newValue);
 
-            flags.set(0, newValue == null || !newValue.matches("^([A-Z])([a-z]*)$"));
+            flagsOnSearch.set(0, nameString.get() == null || !nameString.get().matches("^([A-Z])([a-z]*)$"));
 
             if (rowDataBuyer != null) {
-                addButton.setDisable((rowDataBuyer.getName().equals(newValue) &&
-                        rowDataBuyer.getPhone().equals(phoneString.get()) &&
-                        rowDataBuyer.getEmail().equals(emailString.get())) ||
-                        flags.contains(true));
+                flagsOnChange.set(0,nameString.get().equalsIgnoreCase(rowDataBuyer.getName()));
             }
 
             filteredData.setPredicate(buyer -> {
 
-                if (newValue == null || newValue.isEmpty()) {
+                if (nameString.get() == null) {
                     return true;
                 }
 
-                return buyer.getName().contains(newValue) &&
-                        buyer.getPhone().contains(phoneString.get()) &&
-                        buyer.getEmail().contains(emailString.get());
+                return isConfidence(buyer,nameString,phoneString,emailString);
             });
         });
 
@@ -178,24 +178,19 @@ public class BuyersController implements Initializable {
 
             phoneString.set(newValue);
 
-            flags.set(1, newValue == null || newValue.length() != 9 || phoneList.contains(newValue));
+            flagsOnSearch.set(1, phoneString.get() == null || phoneString.get().length() != 9 || phoneList.contains(phoneString.get()));
 
             if (rowDataBuyer != null) {
-                addButton.setDisable((rowDataBuyer.getName().equals(nameString.get()) &&
-                        rowDataBuyer.getPhone().equals(newValue) &&
-                        rowDataBuyer.getEmail().equals(emailString.get())) ||
-                        flags.contains(true));
+                flagsOnChange.set(1,phoneString.get().equals(rowDataBuyer.getPhone()));
             }
 
             filteredData.setPredicate(buyer -> {
 
-                if (newValue == null || newValue.isEmpty()) {
+                if (phoneString.get() == null) {
                     return true;
                 }
 
-                return buyer.getPhone().contains(newValue) &&
-                        buyer.getName().contains(nameString.get()) &&
-                        buyer.getEmail().contains(emailString.get());
+                return isConfidence(buyer,nameString,phoneString,emailString);
             });
         });
 
@@ -203,24 +198,19 @@ public class BuyersController implements Initializable {
         emailField.textProperty().addListener((observable, oldValue, newValue) -> {
             emailString.set(newValue);
 
-            flags.set(2, newValue == null || newValue.isEmpty() || !newValue.matches("^[a-zA-Z0-9_!#$%&'*+/=?`{|}~^.-]+@[ a-zA-Z0-9.-]+$"));
+            flagsOnSearch.set(2, emailString.get() == null || !emailString.get().matches("^[a-zA-Z0-9_!#$%&'*+/=?`{|}~^.-]+@[ a-zA-Z0-9.-]+$"));
 
             if (rowDataBuyer != null) {
-                addButton.setDisable((rowDataBuyer.getName().equals(nameString.get()) &&
-                        rowDataBuyer.getPhone().equals(phoneString.get()) &&
-                        rowDataBuyer.getEmail().equals(newValue)) ||
-                        flags.contains(true));
+                flagsOnChange.set(2,emailString.get().equals(rowDataBuyer.getEmail()));
             }
 
             filteredData.setPredicate(buyer -> {
 
-                if (newValue == null || newValue.isEmpty()) {
+                if (emailString.get() == null) {
                     return true;
                 }
 
-                return buyer.getEmail().contains(newValue) &&
-                        buyer.getName().contains(nameString.get()) &&
-                        buyer.getPhone().contains(phoneString.get());
+                return isConfidence(buyer,nameString,phoneString,emailString);
             });
         });
 
@@ -243,14 +233,20 @@ public class BuyersController implements Initializable {
                 if (mouseEvent.getClickCount() == 2 && rowData.equals(buyersTable.getSelectionModel().getSelectedItem())) {
                     showRstButton();
                     rowDataBuyer = rowData;
-                    addBuyerToFields(rowData);
-                    prepareTableForChanges(rowData);
-                    convertAddToChg(row);
+                    addBuyerToFields();
+                    prepareTableForChanges();
+                    convertAddToChg();
                 }
             }));
 
             return row;
         });
+    }
+
+    private boolean isConfidence(Buyer buyer, AtomicReference<String> nameString, AtomicReference<String> phoneString, AtomicReference<String> emailString) {
+        return buyer.getName().contains(nameString.get()) &&
+                buyer.getPhone().contains(phoneString.get()) &&
+                buyer.getEmail().contains(emailString.get());
     }
 
     void onAddEvent() {
@@ -261,23 +257,31 @@ public class BuyersController implements Initializable {
         } else messageLabel.setText(MessageConfig.NOT_APPROVED.getTitle());
     }
 
-    private void prepareTableForChanges(Buyer rowData) {
-        phoneList.remove(rowData.getPhone());
-        flags.set(1, false);
+    private void prepareTableForChanges() {
+        phoneList.remove(rowDataBuyer.getPhone());
     }
 
     private void resetChanges() {
         phoneList.add(rowDataBuyer.getPhone());
+        flagsOnChange.setAll(false);
         rowDataBuyer = null;
     }
 
-    private void onChangeEvent(Buyer buyer) {
-        rowDataBuyer = null;
+    private void onChangeEvent() {
+        deleteBuyerInf();
+        updateRowDataBuyer();
         hideRstButton();
-        addBuyerInf(buyer);
-        databaseHandler.updateBuyer(buyer);
+        addBuyerInf();
+        databaseHandler.updateBuyer(rowDataBuyer);
         convertChgToAdd();
         clearFields();
+        rowDataBuyer = null;
+    }
+
+    private void updateRowDataBuyer() {
+        rowDataBuyer.setEmail(emailField.getText());
+        rowDataBuyer.setPhone(phoneField.getText());
+        rowDataBuyer.setName(nameField.getText());
     }
 
     private void clearFields() {
@@ -292,9 +296,9 @@ public class BuyersController implements Initializable {
         addButton.setOnAction(actionEvent -> onAddEvent());
     }
 
-    private void addBuyerInf(Buyer buyer) {
-        data.add(buyer);
-        phoneList.add(buyer.getPhone());
+    private void addBuyerInf() {
+        data.add(rowDataBuyer);
+        phoneList.add(rowDataBuyer.getPhone());
     }
 
     private void hideRstButton() {
@@ -307,25 +311,19 @@ public class BuyersController implements Initializable {
         resetButton.setDisable(false);
     }
 
-    private void convertAddToChg(TableRow<Buyer> row) {
+    private void convertAddToChg() {
         addButton.setText("Chg");
         addButton.setDisable(true);
-        addButton.setOnAction(actionEvent -> {
-            deleteBuyerInf(row);
-            onChangeEvent(new Buyer(rowDataBuyer.getID(), nameField.getText(),
-                    phoneField.getText(),
-                    emailField.getText()));
-        });
+        addButton.setOnAction(actionEvent -> onChangeEvent());
     }
 
-    private void deleteBuyerInf(TableRow<Buyer> row) {
-        row.setDisable(false);
+    private void deleteBuyerInf() {
         data.remove(rowDataBuyer);
     }
 
-    private void addBuyerToFields(Buyer rowData) {
-        nameField.setText(rowData.getName());
-        phoneField.setText(rowData.getPhone());
-        emailField.setText(rowData.getEmail());
+    private void addBuyerToFields() {
+        nameField.setText(rowDataBuyer.getName());
+        phoneField.setText(rowDataBuyer.getPhone());
+        emailField.setText(rowDataBuyer.getEmail());
     }
 }

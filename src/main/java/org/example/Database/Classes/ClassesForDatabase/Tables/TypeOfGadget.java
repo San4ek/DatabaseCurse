@@ -1,4 +1,4 @@
-package org.example.Database.Classes.ClassesForDatabase;
+package org.example.Database.Classes.ClassesForDatabase.Tables;
 
 public class TypeOfGadget {
     private int ID;

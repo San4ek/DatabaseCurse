@@ -1,12 +1,12 @@
-package org.example.Database.Enums.EnumsForDatabase;
+package org.example.Database.Enums.EnumsForDatabase.Tables;
 
-public enum Countries {
+public enum TypesOfGadgets {
     ID("ID"),
-    COUNTRY("Country");
+    TYPE("Type");
 
     private String title;
 
-    Countries(String title) {
+    TypesOfGadgets(String title) {
         this.title = title;
     }
 

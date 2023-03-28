@@ -1,4 +1,4 @@
-package org.example.Database.Enums.EnumsForDatabase;
+package org.example.Database.Enums.EnumsForDatabase.Tables;
 
 public enum Providers {
     ID("ID"),

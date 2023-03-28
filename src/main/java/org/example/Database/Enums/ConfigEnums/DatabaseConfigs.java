@@ -1,7 +1,7 @@
 package org.example.Database.Enums.ConfigEnums;
 
 public enum DatabaseConfigs {
-    PASSWORD("12345678"),
+    PASSWORD("Utermybest1"),
     USER("root"),
     HOST("localhost"),
     NAME("shop"),

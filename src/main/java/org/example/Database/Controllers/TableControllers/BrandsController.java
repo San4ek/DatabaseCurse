@@ -11,10 +11,10 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
-import org.example.Database.Classes.ClassesForDatabase.Brand;
+import org.example.Database.Classes.ClassesForDatabase.Tables.Brand;
 import org.example.Database.Classes.ConfigClasses.UnaryOperators;
 import org.example.Database.Classes.HandlerClasses.DatabaseHandler;
-import org.example.Database.Enums.EnumsForDatabase.Brands;
+import org.example.Database.Enums.EnumsForDatabase.Tables.Brands;
 import org.example.Database.Enums.EnumsForFX.Scenes;
 import org.example.Database.Interfaces.AddInformation;
 
@@ -58,17 +58,17 @@ public class BrandsController implements Initializable {
     private TableColumn<Brand, Integer> idColumn;
 
     private final ArrayList<String> brandList = new ArrayList<>();
-
     private Brand rowDataBrand = null;
-
-    private final ObservableList<Boolean> flags = FXCollections.observableArrayList();
+    private final ObservableList<Boolean> flagsOnSearch = FXCollections.observableArrayList();
+    private final ObservableList<Boolean> flagsOnChange = FXCollections.observableArrayList();
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
 
         hideRstButton();
 
-        flags.add(true);
+        flagsOnSearch.add(true);
+        flagsOnChange.add(false);
 
         AddInformation<ResultSet, ObservableList<Brand>> information=(brands, data) -> {
             try {
@@ -82,12 +82,18 @@ public class BrandsController implements Initializable {
         };
         information.addInf(brands,data);
 
-        flags.addListener((ListChangeListener<Boolean>) change -> addButton.setDisable(flags.contains(true)));
+        flagsOnSearch.addListener((ListChangeListener<Boolean>) change -> addButton.setDisable(flagsOnChange.contains(true) || flagsOnSearch.contains(true)));
+        flagsOnChange.addListener((ListChangeListener<Boolean>) change -> addButton.setDisable(flagsOnChange.contains(true) || flagsOnSearch.contains(true)));
+
+        backButton.setOnAction(actionEvent -> Scenes.MENU.setScene((Stage) backButton.getScene().getWindow()));
+
+        addButton.setOnAction(actionEvent -> onAddEvent());
 
         idColumn.setCellValueFactory(new PropertyValueFactory<>(Brands.ID.getTitle()));
-        brandColumn.setCellValueFactory(new PropertyValueFactory<>(Brands.ID.getTitle()));
-        deleteColumn.setCellValueFactory(param -> new ReadOnlyObjectWrapper<>(param.getValue()));
 
+        brandColumn.setCellValueFactory(new PropertyValueFactory<>(Brands.BRAND.getTitle()));
+
+        deleteColumn.setCellValueFactory(param -> new ReadOnlyObjectWrapper<>(param.getValue()));
         deleteColumn.setCellFactory(param -> new TableCell<>() {
             private final Button deleteButton = new Button("Delete");
 
@@ -111,29 +117,28 @@ public class BrandsController implements Initializable {
             }
         });
 
-        backButton.setOnAction(actionEvent -> Scenes.MENU.setScene((Stage) backButton.getScene().getWindow()));
-
-        addButton.setOnAction(actionEvent -> onAddEvent());
-
         FilteredList<Brand> filteredData = new FilteredList<>(data, b -> true);
 
         AtomicReference<String> brandString = new AtomicReference<>("");
 
+        brandField.setTextFormatter(new TextFormatter<>(UnaryOperators.getBrandValidationFormatter()));
         brandField.textProperty().addListener((observable, oldValue, newValue) -> {
 
-            flags.set(0, newValue == null || newValue.isEmpty()|| brandList.contains(newValue));
+            brandString.set(newValue);
+
+            flagsOnSearch.set(0, brandString.get() == null || brandList.contains(brandString.get()));
 
             if (rowDataBrand != null) {
-                addButton.setDisable(rowDataBrand.getBrand().equals(brandString.get()) || flags.contains(true));
+                flagsOnChange.set(0,brandString.get().equalsIgnoreCase(rowDataBrand.getBrand()));
             }
 
             filteredData.setPredicate(brand -> {
 
-                if (newValue == null || newValue.isEmpty()) {
+                if (brandString.get() == null) {
                     return true;
                 }
 
-                return brand.getBrand().toLowerCase().contains(newValue.toLowerCase());
+                return isCoincidence(brand,brandString);
             });
         });
 
@@ -142,8 +147,6 @@ public class BrandsController implements Initializable {
         sortedData.comparatorProperty().bind(brandTable.comparatorProperty());
         brandTable.setItems(sortedData);
 
-        brandField.setTextFormatter(new TextFormatter<>(UnaryOperators.getBrandValidationFormatter()));
-
         brandTable.setRowFactory(param -> {
             TableRow<Brand> row = new TableRow<>();
 
@@ -151,15 +154,15 @@ public class BrandsController implements Initializable {
                 convertChgToAdd();
                 hideRstButton();
                 resetChanges();
-                clearField();
+                clearFields();
             });
 
             row.setOnMouseClicked(mouseEvent -> Optional.ofNullable(row.getItem()).ifPresent(rowData -> {
                 if (mouseEvent.getClickCount() == 2 && rowData.equals(brandTable.getSelectionModel().getSelectedItem())) {
                     showRstButton();
                     rowDataBrand = rowData;
-                    addBrandToField(rowData);
-                    prepareTableForChanges(rowData);
+                    addBrandToFields();
+                    prepareTableForChanges();
                     convertAddToChg();
                 }
             }));
@@ -168,17 +171,55 @@ public class BrandsController implements Initializable {
         });
     }
 
-    private void convertAddToChg() {
-        addButton.setText("Chg");
-        addButton.setDisable(true);
-        addButton.setOnAction(actionEvent -> {
-            deleteBuyerInf();
-            onChangeEvent(new Brand(rowDataBrand.getID(), brandField.getText()));
-        });
+    private boolean isCoincidence(Brand brand, AtomicReference<String> brandString) {
+        return brand.getBrand().toLowerCase().contains(brandString.get().toLowerCase());
     }
 
-    private void deleteBuyerInf() {
-        data.remove(rowDataBrand);
+    void onAddEvent() {
+        data.add(databaseHandler.insertAndGetBrand(new Brand(brandField.getText())));
+        brandTable.setItems(data);
+        flagsOnChange.setAll(false);
+        clearFields();
+    }
+
+    private void prepareTableForChanges() {
+        brandList.remove(rowDataBrand.getBrand());
+    }
+
+    private void resetChanges() {
+        brandList.add(rowDataBrand.getBrand());
+        flagsOnChange.setAll(false);
+        rowDataBrand = null;
+    }
+
+    private void onChangeEvent() {
+        deleteBrandInf();
+        updateRowDataBrand();
+        hideRstButton();
+        addBrandInf();
+        databaseHandler.updateBrand(rowDataBrand);
+        convertChgToAdd();
+        clearFields();
+        rowDataBrand = null;
+    }
+
+    private void updateRowDataBrand() {
+        rowDataBrand.setBrand(brandField.getText());
+    }
+
+    private void clearFields() {
+        brandField.clear();
+    }
+
+    private void convertChgToAdd() {
+        addButton.setDisable(false);
+        addButton.setText("Add");
+        addButton.setOnAction(actionEvent -> onAddEvent());
+    }
+
+    private void addBrandInf() {
+        data.add(rowDataBrand);
+        brandList.add(rowDataBrand.getBrand());
     }
 
     private void hideRstButton() {
@@ -191,47 +232,17 @@ public class BrandsController implements Initializable {
         resetButton.setDisable(false);
     }
 
-    private void prepareTableForChanges(Brand rowData) {
-        brandList.remove(rowData.getBrand());
-        flags.set(0, false);
+    private void convertAddToChg() {
+        addButton.setText("Chg");
+        addButton.setDisable(true);
+        addButton.setOnAction(actionEvent -> onChangeEvent());
     }
 
-    private void clearField() {
-        brandField.clear();
+    private void deleteBrandInf() {
+        data.remove(rowDataBrand);
     }
 
-    private void resetChanges() {
-        brandList.add(rowDataBrand.getBrand());
-        rowDataBrand = null;
-    }
-
-    private void onAddEvent() {
-        data.add(databaseHandler.insertAndGetBrand(new Brand(brandField.getText())));
-        brandTable.setItems(data);
-        brandField.clear();
-    }
-
-    private void addBrandToField(Brand rowData) {
-        brandField.setText(rowData.getBrand());
-    }
-
-    private void onChangeEvent(Brand brand) {
-        rowDataBrand = null;
-        hideRstButton();
-        addBuyerInf(brand);
-        databaseHandler.updateBrand(brand);
-        convertChgToAdd();
-        clearField();
-    }
-
-    private void convertChgToAdd() {
-        addButton.setDisable(false);
-        addButton.setText("Add");
-        addButton.setOnAction(actionEvent -> onAddEvent());
-    }
-
-    private void addBuyerInf(Brand brand) {
-        data.add(brand);
-        brandList.add(brand.getBrand());
+    private void addBrandToFields() {
+        brandField.setText(rowDataBrand.getBrand());
     }
 }

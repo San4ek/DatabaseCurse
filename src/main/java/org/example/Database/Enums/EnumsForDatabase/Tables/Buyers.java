@@ -1,14 +1,14 @@
-package org.example.Database.Enums.EnumsForDatabase;
+package org.example.Database.Enums.EnumsForDatabase.Tables;
 
-public enum Consultants {
+public enum Buyers {
     ID("ID"),
     NAME("Name"),
     PHONE("Phone"),
-    RATING("Rating");
+    EMAIL("Email");
 
     private String title;
 
-    Consultants(String title) {
+    Buyers(String title) {
         this.title = title;
     }
 

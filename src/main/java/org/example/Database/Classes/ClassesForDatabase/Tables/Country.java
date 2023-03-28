@@ -1,8 +1,8 @@
-package org.example.Database.Classes.ClassesForDatabase;
+package org.example.Database.Classes.ClassesForDatabase.Tables;
 
 public class Country {
     private int ID;
-    private final String Country;
+    private String Country;
 
     public Country(int ID, String name) {
         this.ID = ID;
@@ -23,6 +23,10 @@ public class Country {
 
     public void setID(int ID) {
         this.ID = ID;
+    }
+
+    public void setCountry(String country) {
+        Country = country;
     }
 
     @Override

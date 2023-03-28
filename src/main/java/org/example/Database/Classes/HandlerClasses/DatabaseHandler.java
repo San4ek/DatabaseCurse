@@ -1,8 +1,8 @@
 package org.example.Database.Classes.HandlerClasses;
 
-import org.example.Database.Classes.ClassesForDatabase.*;
-import org.example.Database.Enums.EnumsForDatabase.*;
+import org.example.Database.Classes.ClassesForDatabase.Tables.*;
 import org.example.Database.Enums.ConfigEnums.DatabaseConfigs;
+import org.example.Database.Enums.EnumsForDatabase.Tables.*;
 
 import java.lang.reflect.InvocationTargetException;
 import java.sql.*;
@@ -85,6 +85,7 @@ public class DatabaseHandler {
     }
 
     public void updateBrand(Brand brand) {
+        System.out.println(brand);
         comandString = "UPDATE "+Tables.BRANDS.getTitle()+" SET "+Brands.BRAND.getTitle()+"=? WHERE "+Brands.ID.getTitle()+"=?";
         try {
             prSt = getConnection().prepareStatement(comandString);
@@ -411,7 +412,7 @@ public class DatabaseHandler {
         comandString = "INSERT INTO "+Tables.GADGETS.getTitle()+"("+Gadgets.TYPE.getTitle()+","+
                 Gadgets.NAME.getTitle()+","+
                 Gadgets.BRAND.getTitle()+","+
-                Gadgets.COUNTRY_OF_MANUFACTURE.getTitle()+","+
+                Gadgets.COUNTRY.getTitle()+","+
                 Gadgets.WARRANTY.getTitle()+","+
                 Gadgets.SERVICE_LIFE.getTitle()+","+
                 Gadgets.COST.getTitle()+","+
@@ -457,7 +458,7 @@ public class DatabaseHandler {
                 Gadgets.TYPE.getTitle()+"=?,"+
                 Gadgets.NAME.getTitle()+"=?,"+
                 Gadgets.BRAND.getTitle()+"=?,"+
-                Gadgets.COUNTRY_OF_MANUFACTURE.getTitle()+"=?,"+
+                Gadgets.COUNTRY.getTitle()+"=?,"+
                 Gadgets.SERVICE_LIFE.getTitle()+"=?,"+
                 Gadgets.COST.getTitle()+"=?,"+
                 Gadgets.PROVIDER.getTitle()+"=? WHERE "+Gadgets.ID.getTitle()+"=?";

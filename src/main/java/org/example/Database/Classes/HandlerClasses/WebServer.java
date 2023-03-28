@@ -4,7 +4,7 @@ import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import com.sun.net.httpserver.HttpServer;
 import javafx.collections.ObservableList;
-import org.example.Database.Classes.ClassesForDatabase.Buyer;
+import org.example.Database.Classes.ClassesForDatabase.Tables.Buyer;
 import org.example.Database.Enums.ConfigEnums.ServerConfigs;
 
 import java.io.IOException;

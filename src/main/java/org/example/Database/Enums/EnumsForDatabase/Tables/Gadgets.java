@@ -1,11 +1,11 @@
-package org.example.Database.Enums.EnumsForDatabase;
+package org.example.Database.Enums.EnumsForDatabase.Tables;
 
 public enum Gadgets {
     ID("ID"),
     TYPE("Type"),
     NAME("Name"),
     BRAND("Brand"),
-    COUNTRY_OF_MANUFACTURE("Country"),
+    COUNTRY("Country"),
     WARRANTY("Warranty"),
     SERVICE_LIFE("ServiceLife"),
     COST("Cost"),

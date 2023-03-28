@@ -1,4 +1,4 @@
-package org.example.Database.Enums.EnumsForDatabase;
+package org.example.Database.Enums.EnumsForDatabase.Tables;
 
 public enum Tables {
     BRANDS("brands"),

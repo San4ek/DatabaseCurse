@@ -11,10 +11,10 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
-import org.example.Database.Classes.ClassesForDatabase.TypeOfGadget;
+import org.example.Database.Classes.ClassesForDatabase.Tables.TypeOfGadget;
 import org.example.Database.Classes.ConfigClasses.UnaryOperators;
 import org.example.Database.Classes.HandlerClasses.DatabaseHandler;
-import org.example.Database.Enums.EnumsForDatabase.TypesOfGadgets;
+import org.example.Database.Enums.EnumsForDatabase.Tables.TypesOfGadgets;
 import org.example.Database.Enums.EnumsForFX.Scenes;
 import org.example.Database.Interfaces.AddInformation;
 
@@ -55,6 +55,7 @@ public class TypesOfGadgetsController implements Initializable {
     private final ArrayList<String> typeList = new ArrayList<>();
     private TypeOfGadget rowDataType = null;
     private final ObservableList<Boolean> flagsOnSearch = FXCollections.observableArrayList();
+    private final ObservableList<Boolean> flagsOnChange=FXCollections.observableArrayList();
     private final ObservableList<TypeOfGadget> data = FXCollections.observableArrayList();
     private final DatabaseHandler databaseHandler = new DatabaseHandler();
     private final ResultSet types = databaseHandler.selectTypes();
@@ -64,6 +65,7 @@ public class TypesOfGadgetsController implements Initializable {
         hideRstButton();
 
         flagsOnSearch.add(true);
+        flagsOnChange.add(false);
 
         AddInformation<ResultSet, ObservableList<TypeOfGadget>> information=(types, data) -> {
             try {
