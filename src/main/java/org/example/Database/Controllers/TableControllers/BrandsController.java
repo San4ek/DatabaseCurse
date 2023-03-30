@@ -132,14 +132,7 @@ public class BrandsController implements Initializable {
                 flagsOnChange.set(0,brandString.get().equalsIgnoreCase(rowDataBrand.getBrand()));
             }
 
-            filteredData.setPredicate(brand -> {
-
-                if (brandString.get() == null) {
-                    return true;
-                }
-
-                return isCoincidence(brand,brandString);
-            });
+            filteredData.setPredicate(brand -> isCoincidence(brand,brandString));
         });
 
         SortedList<Brand> sortedData = new SortedList<>(filteredData);
@@ -172,7 +165,7 @@ public class BrandsController implements Initializable {
     }
 
     private boolean isCoincidence(Brand brand, AtomicReference<String> brandString) {
-        return brand.getBrand().toLowerCase().contains(brandString.get().toLowerCase());
+        return brandString.get() == null || brand.getBrand().toLowerCase().contains(brandString.get().toLowerCase());
     }
 
     void onAddEvent() {

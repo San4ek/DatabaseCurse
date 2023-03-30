@@ -396,11 +396,11 @@ public class DatabaseHandler {
         return resSet;
     }
 
-    public void deleteGadget(Gadget gadget) {
+    public void deleteGadget(GadgetTable gadgetTable) {
         comandString="DELETE FROM "+Tables.GADGETS.getTitle()+" WHERE "+ Gadgets.ID.getTitle()+"=?";
         try {
             prSt= getConnection().prepareStatement(comandString);
-            prSt.setString(1, String.valueOf(gadget.getID()));
+            prSt.setString(1, String.valueOf(gadgetTable.getID()));
 
             prSt.executeUpdate();
         } catch (SQLException e) {
@@ -408,7 +408,7 @@ public class DatabaseHandler {
         }
     }
 
-    public Gadget insertAndGetGadget(Gadget gadget) {
+    public GadgetTable insertAndGetGadget(GadgetTable gadgetTable) {
         comandString = "INSERT INTO "+Tables.GADGETS.getTitle()+"("+Gadgets.TYPE.getTitle()+","+
                 Gadgets.NAME.getTitle()+","+
                 Gadgets.BRAND.getTitle()+","+
@@ -419,31 +419,31 @@ public class DatabaseHandler {
                 Gadgets.PROVIDER.getTitle()+") VALUES (?,?,?,?,?,?,?,?)";
         try {
             prSt = getConnection().prepareStatement(comandString);
-            prSt.setString(1, String.valueOf(gadget.getType()));
-            prSt.setString(2, gadget.getName());
-            prSt.setString(3, String.valueOf(gadget.getBrand()));
-            prSt.setString(4, String.valueOf(gadget.getCountry()));
-            prSt.setString(5, String.valueOf(gadget.getWarranty()));
-            prSt.setString(6, String.valueOf(gadget.getServiceLife()));
-            prSt.setString(7, String.valueOf(gadget.getCost()));
-            prSt.setString(8, String.valueOf(gadget.getProvider()));
+            prSt.setString(1, String.valueOf(gadgetTable.getType()));
+            prSt.setString(2, gadgetTable.getName());
+            prSt.setString(3, String.valueOf(gadgetTable.getBrand()));
+            prSt.setString(4, String.valueOf(gadgetTable.getCountry()));
+            prSt.setString(5, String.valueOf(gadgetTable.getWarranty()));
+            prSt.setString(6, String.valueOf(gadgetTable.getServiceLife()));
+            prSt.setString(7, String.valueOf(gadgetTable.getCost()));
+            prSt.setString(8, String.valueOf(gadgetTable.getProvider()));
             prSt.executeUpdate();
 
-            resSet=getGadgetID(gadget);
+            resSet=getGadgetID(gadgetTable);
             resSet.next();
-            gadget.setID(resSet.getInt(1));
+            gadgetTable.setID(resSet.getInt(1));
         } catch (SQLException e) {
             e.printStackTrace();
         }
 
-        return gadget;
+        return gadgetTable;
     }
 
-    private ResultSet getGadgetID(Gadget gadget) {
+    private ResultSet getGadgetID(GadgetTable gadgetTable) {
         comandString="SELECT * FROM "+Tables.GADGETS.getTitle()+" WHERE "+ Gadgets.NAME.getTitle()+"=?";
         try {
             prSt = getConnection().prepareStatement(comandString);
-            prSt.setString(1, gadget.getName());
+            prSt.setString(1, gadgetTable.getName());
 
             resSet=prSt.executeQuery();
         } catch (SQLException e) {
@@ -453,7 +453,7 @@ public class DatabaseHandler {
         return resSet;
     }
 
-    public void updateGadget(Gadget gadget) {
+    public void updateGadget(GadgetTable gadgetTable) {
         comandString = "UPDATE "+Tables.GADGETS.getTitle()+" SET "+
                 Gadgets.TYPE.getTitle()+"=?,"+
                 Gadgets.NAME.getTitle()+"=?,"+
@@ -464,15 +464,15 @@ public class DatabaseHandler {
                 Gadgets.PROVIDER.getTitle()+"=? WHERE "+Gadgets.ID.getTitle()+"=?";
         try {
             prSt = getConnection().prepareStatement(comandString);
-            prSt.setString(1, String.valueOf(gadget.getType()));
-            prSt.setString(2, gadget.getName());
-            prSt.setString(3, String.valueOf(gadget.getBrand()));
-            prSt.setString(4, String.valueOf(gadget.getCountry()));
-            prSt.setString(5, String.valueOf(gadget.getWarranty()));
-            prSt.setString(6, String.valueOf(gadget.getServiceLife()));
-            prSt.setString(7, String.valueOf(gadget.getCost()));
-            prSt.setString(8, String.valueOf(gadget.getType()));
-            prSt.setString(9,String.valueOf(gadget.getID()));
+            prSt.setString(1, String.valueOf(gadgetTable.getType()));
+            prSt.setString(2, gadgetTable.getName());
+            prSt.setString(3, String.valueOf(gadgetTable.getBrand()));
+            prSt.setString(4, String.valueOf(gadgetTable.getCountry()));
+            prSt.setString(5, String.valueOf(gadgetTable.getWarranty()));
+            prSt.setString(6, String.valueOf(gadgetTable.getServiceLife()));
+            prSt.setString(7, String.valueOf(gadgetTable.getCost()));
+            prSt.setString(8, String.valueOf(gadgetTable.getType()));
+            prSt.setString(9,String.valueOf(gadgetTable.getID()));
 
             prSt.executeUpdate();
         } catch (SQLException e) {
