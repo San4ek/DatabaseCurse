@@ -1,15 +1,15 @@
 package org.example.Database.Classes.ClassesForDatabase.Tables;
 
-public class Country {
+public class CountryTable {
     private int ID;
     private String Country;
 
-    public Country(int ID, String name) {
+    public CountryTable(int ID, String name) {
         this.ID = ID;
         Country = name;
     }
 
-    public Country(String name) {
+    public CountryTable(String name) {
         Country = name;
     }
 

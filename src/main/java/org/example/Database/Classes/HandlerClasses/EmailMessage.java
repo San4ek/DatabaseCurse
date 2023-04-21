@@ -18,7 +18,7 @@ public class EmailMessage {
         Session session = Session.getDefaultInstance(props, new javax.mail.Authenticator() {
             @Override
             protected PasswordAuthentication getPasswordAuthentication() {
-                return new PasswordAuthentication("sankevich2003@mail.ru", "ej96Hrbf4dNXWkwkXqc5");
+                return new PasswordAuthentication("sankevich2003@mail.ru", "w9PmQnnACdPXzxGNgeaH");
             }
         });
         try {

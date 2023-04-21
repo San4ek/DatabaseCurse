@@ -1,13 +1,13 @@
 package org.example.Database.Classes.ClassesForDatabase.Tables;
 
-public class Provider {
+public class ProviderTable {
     private int ID;
     private String Name;
     private String Phone;
     private String Email;
     private int Country;
 
-    public Provider(int ID, String name, String phone, String email, int country) {
+    public ProviderTable(int ID, String name, String phone, String email, int country) {
         this.ID = ID;
         Name = name;
         Phone = phone;
@@ -15,14 +15,14 @@ public class Provider {
         Country = country;
     }
 
-    public Provider(String name, String phone, String email, int country) {
+    public ProviderTable(String name, String phone, String email, int country) {
         Name = name;
         Phone = phone;
         Email = email;
         Country = country;
     }
 
-    public Provider(int ID, String name) {
+    public ProviderTable(int ID, String name) {
         this.ID=ID;
         Name=name;
     }

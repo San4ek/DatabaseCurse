@@ -11,9 +11,10 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
-import org.example.Database.Classes.ClassesForDatabase.Tables.TypeOfGadget;
+import org.example.Database.Classes.ClassesForDatabase.Tables.TypeOfGadgetTable;
 import org.example.Database.Classes.ConfigClasses.UnaryOperators;
 import org.example.Database.Classes.HandlerClasses.DatabaseHandler;
+import org.example.Database.Controllers.ViewControllers.GadgetsViewController;
 import org.example.Database.Enums.EnumsForDatabase.Tables.TypesOfGadgets;
 import org.example.Database.Enums.EnumsForFX.Scenes;
 import org.example.Database.Interfaces.AddInformation;
@@ -26,7 +27,7 @@ import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.concurrent.atomic.AtomicReference;
 
-public class TypesOfGadgetsController implements Initializable {
+public class TypesOfGadgetsTableController extends GadgetsViewController implements Initializable {
 
     @FXML
     private Button addButton;
@@ -35,42 +36,42 @@ public class TypesOfGadgetsController implements Initializable {
     private Button backButton;
 
     @FXML
-    private TableColumn<TypeOfGadget, TypeOfGadget> deleteColumn;
+    private TableColumn<TypeOfGadgetTable, TypeOfGadgetTable> deleteColumn;
 
     @FXML
-    private TableColumn<TypeOfGadget, Integer> idColumn;
+    private TableColumn<TypeOfGadgetTable, Integer> idColumn;
 
     @FXML
     private Button resetButton;
 
     @FXML
-    private TableColumn<TypeOfGadget, String> typeColumn;
+    private TableColumn<TypeOfGadgetTable, String> typeColumn;
 
     @FXML
     private TextField typeField;
 
     @FXML
-    private TableView<TypeOfGadget> typeTable;
+    private TableView<TypeOfGadgetTable> typeTable;
 
     private final ArrayList<String> typeList = new ArrayList<>();
-    private TypeOfGadget rowDataType = null;
+    private TypeOfGadgetTable rowDataType = null;
     private final ObservableList<Boolean> flagsOnSearch = FXCollections.observableArrayList();
     private final ObservableList<Boolean> flagsOnChange=FXCollections.observableArrayList();
-    private final ObservableList<TypeOfGadget> data = FXCollections.observableArrayList();
+    private final ObservableList<TypeOfGadgetTable> data = FXCollections.observableArrayList();
     private final DatabaseHandler databaseHandler = new DatabaseHandler();
     private final ResultSet types = databaseHandler.selectTypes();
+    private final String emptyString="";
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         hideRstButton();
 
-        flagsOnSearch.add(true);
-        flagsOnChange.add(false);
+        setFlags();
 
-        AddInformation<ResultSet, ObservableList<TypeOfGadget>> information=(types, data) -> {
+        AddInformation<ResultSet, ObservableList<TypeOfGadgetTable>> information=(types, data) -> {
             try {
                 while (types.next()) {
-                    data.add(new TypeOfGadget(types.getInt(1), types.getString(2)));
+                    data.add(new TypeOfGadgetTable(types.getInt(1), types.getString(2)));
                     typeList.add(types.getString(2));
                 }
             } catch (SQLException e) {
@@ -80,6 +81,7 @@ public class TypesOfGadgetsController implements Initializable {
         information.addInf(types,data);
 
         flagsOnSearch.addListener((ListChangeListener<Boolean>) change -> addButton.setDisable(flagsOnSearch.contains(true)));
+        flagsOnChange.addListener((ListChangeListener<Boolean>) change -> addButton.setDisable(!flagsOnChange.contains(false)));
 
         idColumn.setCellValueFactory(new PropertyValueFactory<>(TypesOfGadgets.ID.getTitle()));
         typeColumn.setCellValueFactory(new PropertyValueFactory<>(TypesOfGadgets.TYPE.getTitle()));
@@ -89,7 +91,7 @@ public class TypesOfGadgetsController implements Initializable {
             private final Button deleteButton = new Button("Delete");
 
             @Override
-            protected void updateItem(TypeOfGadget type, boolean empty) {
+            protected void updateItem(TypeOfGadgetTable type, boolean empty) {
                 super.updateItem(type, empty);
 
                 if (type == null) {
@@ -112,31 +114,24 @@ public class TypesOfGadgetsController implements Initializable {
 
         addButton.setOnAction(actionEvent -> onAddEvent());
 
-        FilteredList<TypeOfGadget> filteredData = new FilteredList<>(data, b -> true);
+        FilteredList<TypeOfGadgetTable> filteredData = new FilteredList<>(data, b -> true);
 
-        AtomicReference<String> typeString = new AtomicReference<>("");
+        AtomicReference<String> typeString = new AtomicReference<>(emptyString);
 
         typeField.textProperty().addListener((observable, oldValue, newValue) -> {
 
             typeString.set(newValue);
 
-            flagsOnSearch.set(0, typeString.get() == null || typeList.contains(typeString.get()));
+            flagsOnSearch.set(0, typeString.get().equals(emptyString) || typeList.contains(typeString.get()));
 
             if (rowDataType != null) {
                 addButton.setDisable(rowDataType.getType().equals(typeString.get()) || flagsOnSearch.contains(true));
             }
 
-            filteredData.setPredicate(type -> {
-
-                if (newValue == null || newValue.isEmpty()) {
-                    return true;
-                }
-
-                return type.getType().toLowerCase().contains(newValue.toLowerCase());
-            });
+            filteredData.setPredicate(type -> isCoincidence(typeString,type));
         });
 
-        SortedList<TypeOfGadget> sortedData = new SortedList<>(filteredData);
+        SortedList<TypeOfGadgetTable> sortedData = new SortedList<>(filteredData);
 
         sortedData.comparatorProperty().bind(typeTable.comparatorProperty());
         typeTable.setItems(sortedData);
@@ -144,7 +139,7 @@ public class TypesOfGadgetsController implements Initializable {
         typeField.setTextFormatter(new TextFormatter<>(UnaryOperators.getTypeValidationFormatter()));
 
         typeTable.setRowFactory(param -> {
-            TableRow<TypeOfGadget> row = new TableRow<>();
+            TableRow<TypeOfGadgetTable> row = new TableRow<>();
 
             resetButton.setOnAction(actionEvent -> {
                 convertChgToAdd();
@@ -167,12 +162,23 @@ public class TypesOfGadgetsController implements Initializable {
         });
     }
 
+    private boolean isCoincidence(AtomicReference<String> typeValue, TypeOfGadgetTable type) {
+        return type.getType().toLowerCase().contains(typeValue.get().toLowerCase());
+    }
+
+    private void setFlags() {
+        for (int i = 0; i < 1; ++i) {
+            flagsOnSearch.add(true);
+            flagsOnChange.add(false);
+        }
+    }
+
     private void convertAddToChg() {
         addButton.setText("Chg");
         addButton.setDisable(true);
         addButton.setOnAction(actionEvent -> {
             deleteTypeInf();
-            onChangeEvent(new TypeOfGadget(rowDataType.getID(), typeField.getText()));
+            onChangeEvent(new TypeOfGadgetTable(rowDataType.getID(), typeField.getText()));
         });
     }
 
@@ -190,32 +196,37 @@ public class TypesOfGadgetsController implements Initializable {
         resetButton.setDisable(false);
     }
 
-    private void prepareTableForChanges(TypeOfGadget rowData) {
+    private void prepareTableForChanges(TypeOfGadgetTable rowData) {
         typeList.remove(rowData.getType());
-        flagsOnSearch.setAll(false);
     }
 
     private void clearField() {
-        typeField.clear();
+        typeField.setText(emptyString);
     }
 
     private void resetChanges() {
         typeList.add(rowDataType.getType());
-        rowDataType = null;
+        setFlags();
+        setRowDataNull();
     }
 
     private void onAddEvent() {
-        data.add(databaseHandler.insertAndGetType(new TypeOfGadget(typeField.getText())));
-        typeTable.setItems(data);
-        typeField.clear();
+        data.add(databaseHandler.insertAndGetType(new TypeOfGadgetTable(typeField.getText())));
+        setFlags();
+        clearField();
+        setRowDataNull();
     }
 
-    private void addBrandToField(TypeOfGadget rowData) {
+    private void setRowDataNull() {
+        rowDataType=null;
+    }
+
+    private void addBrandToField(TypeOfGadgetTable rowData) {
         typeField.setText(rowData.getType());
     }
 
-    private void onChangeEvent(TypeOfGadget type) {
-        rowDataType = null;
+    private void onChangeEvent(TypeOfGadgetTable type) {
+        setRowDataNull();
         hideRstButton();
         addBuyerInf(type);
         databaseHandler.updateType(type);
@@ -229,7 +240,7 @@ public class TypesOfGadgetsController implements Initializable {
         addButton.setOnAction(actionEvent -> onAddEvent());
     }
 
-    private void addBuyerInf(TypeOfGadget type) {
+    private void addBuyerInf(TypeOfGadgetTable type) {
         data.add(type);
         typeList.add(type.getType());
     }

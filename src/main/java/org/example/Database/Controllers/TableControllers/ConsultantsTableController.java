@@ -11,7 +11,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
-import org.example.Database.Classes.ClassesForDatabase.Tables.Consultant;
+import org.example.Database.Classes.ClassesForDatabase.Tables.ConsultantTable;
 import org.example.Database.Classes.ConfigClasses.UnaryOperators;
 import org.example.Database.Classes.HandlerClasses.DatabaseHandler;
 import org.example.Database.Enums.EnumsForDatabase.Tables.Consultants;
@@ -26,7 +26,7 @@ import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.concurrent.atomic.AtomicReference;
 
-public class ConsultantsController implements Initializable {
+public class ConsultantsTableController implements Initializable {
 
     @FXML
     private Button addButton;
@@ -35,28 +35,28 @@ public class ConsultantsController implements Initializable {
     private Button backButton;
 
     @FXML
-    private TableView<Consultant> consultantsTable;
+    private TableView<ConsultantTable> consultantsTable;
 
     @FXML
-    private TableColumn<Consultant, Consultant> deleteColumn;
+    private TableColumn<ConsultantTable, ConsultantTable> deleteColumn;
 
     @FXML
-    private TableColumn<Consultant, Integer> idColumn;
+    private TableColumn<ConsultantTable, Integer> idColumn;
 
     @FXML
-    private TableColumn<Consultant, Integer> nameColumn;
+    private TableColumn<ConsultantTable, Integer> nameColumn;
 
     @FXML
     private TextField nameField;
 
     @FXML
-    private TableColumn<Consultant, String> phoneColumn;
+    private TableColumn<ConsultantTable, String> phoneColumn;
 
     @FXML
     private TextField phoneField;
 
     @FXML
-    private TableColumn<Consultant, Integer> ratingColumn;
+    private TableColumn<ConsultantTable, Integer> ratingColumn;
 
     @FXML
     private Spinner<Double> ratingSpinner;
@@ -66,27 +66,25 @@ public class ConsultantsController implements Initializable {
 
     private final DatabaseHandler databaseHandler = new DatabaseHandler();
     private final ResultSet consultants = databaseHandler.selectConsultants();
-    private final ObservableList<Consultant> data = FXCollections.observableArrayList();
+    private final ObservableList<ConsultantTable> data = FXCollections.observableArrayList();
     private final ObservableList<Boolean> flagsOnSearch = FXCollections.observableArrayList();
     private final ObservableList<Boolean> flagsOnChange = FXCollections.observableArrayList();
     private final ArrayList<String> phoneList = new ArrayList<>();
-    private Consultant rowDataConsultant = null;
+    private ConsultantTable rowDataConsultantTable = null;
     private final double nullSpinnerValue=0.0;
+    private final String emptyString="";
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
 
         hideRstButton();
 
-        for (int i = 0; i < 3; ++i) {
-            flagsOnSearch.add(true);
-            flagsOnChange.add(false);
-        }
+        setFlags();
 
-        AddInformation<ResultSet, ObservableList<Consultant>> information = (consultants, data) -> {
+        AddInformation<ResultSet, ObservableList<ConsultantTable>> information = (consultants, data) -> {
             try {
                 while (consultants.next()) {
-                    data.add(new Consultant(consultants.getInt(1),
+                    data.add(new ConsultantTable(consultants.getInt(1),
                             consultants.getString(2),
                             consultants.getString(3),
                             consultants.getDouble(4)));
@@ -98,8 +96,8 @@ public class ConsultantsController implements Initializable {
         };
         information.addInf(consultants, data);
 
-        flagsOnSearch.addListener((ListChangeListener<Boolean>) change -> addButton.setDisable(flagsOnChange.contains(true) || flagsOnSearch.contains(true)));
-        flagsOnChange.addListener((ListChangeListener<Boolean>) change -> addButton.setDisable(flagsOnChange.contains(true) || flagsOnSearch.contains(true)));
+        flagsOnSearch.addListener((ListChangeListener<Boolean>) change -> addButton.setDisable(flagsOnSearch.contains(true)));
+        flagsOnChange.addListener((ListChangeListener<Boolean>) change -> addButton.setDisable(!flagsOnChange.contains(false)));
 
         backButton.setOnAction(actionEvent -> Scenes.TABLES_MENU.setScene((Stage) backButton.getScene().getWindow()));
 
@@ -118,10 +116,10 @@ public class ConsultantsController implements Initializable {
             private final Button deleteButton = new Button("Delete");
 
             @Override
-            protected void updateItem(Consultant consultant, boolean empty) {
-                super.updateItem(consultant, empty);
+            protected void updateItem(ConsultantTable consultantTable, boolean empty) {
+                super.updateItem(consultantTable, empty);
 
-                if (consultant == null) {
+                if (consultantTable == null) {
                     setGraphic(null);
                     return;
                 }
@@ -129,18 +127,18 @@ public class ConsultantsController implements Initializable {
                 setGraphic(deleteButton);
 
                 deleteButton.setOnAction(event -> {
-                    (new Thread(() -> databaseHandler.deleteConsultant(consultant))).start();
-                    phoneList.remove(consultant.getPhone());
+                    (new Thread(() -> databaseHandler.deleteConsultant(consultantTable))).start();
+                    phoneList.remove(consultantTable.getPhone());
 
-                    data.remove(consultant);
+                    data.remove(consultantTable);
                 });
             }
         });
 
-        FilteredList<Consultant> filteredData = new FilteredList<>(data, b -> true);
+        FilteredList<ConsultantTable> filteredData = new FilteredList<>(data, b -> true);
 
-        AtomicReference<String> nameString = new AtomicReference<>("");
-        AtomicReference<String> phoneString = new AtomicReference<>("");
+        AtomicReference<String> nameString = new AtomicReference<>(emptyString);
+        AtomicReference<String> phoneString = new AtomicReference<>(emptyString);
         AtomicReference<Double> ratingValue = new AtomicReference<>(nullSpinnerValue);
 
         nameField.setTextFormatter(new TextFormatter<>(UnaryOperators.getNameValidationFormatter()));
@@ -148,20 +146,13 @@ public class ConsultantsController implements Initializable {
 
             nameString.set(newValue);
 
-            flagsOnSearch.set(0, nameString.get() == null || !nameString.get().matches("^([A-Z])([a-z]*)$"));
+            flagsOnSearch.set(0, nameString.get().equals(emptyString) || !nameString.get().matches("^([A-Z])([a-z]*)$"));
 
-            if (rowDataConsultant != null) {
-                flagsOnChange.set(0,nameString.get().equals(rowDataConsultant.getName()));
+            if (rowDataConsultantTable != null) {
+                flagsOnChange.set(0,nameString.get().equals(rowDataConsultantTable.getName()));
             }
 
-            filteredData.setPredicate(consultant -> {
-
-                if (nameString.get()==null) {
-                    return true;
-                }
-
-                return isConfidence(consultant,nameString,phoneString,ratingValue);
-            });
+            filteredData.setPredicate(consultantTable -> isConfidence(consultantTable,nameString,phoneString,ratingValue));
         });
 
         phoneField.setTextFormatter(new TextFormatter<>(UnaryOperators.getPhoneValidationFormatter()));
@@ -169,20 +160,13 @@ public class ConsultantsController implements Initializable {
 
             phoneString.set(newValue);
 
-            flagsOnSearch.set(1, phoneString.get() == null || phoneString.get().length() != 9 || phoneList.contains(phoneString.get()));
+            flagsOnSearch.set(1, phoneString.get().equals(emptyString) || phoneString.get().length() != 9 || phoneList.contains(phoneString.get()));
 
-            if (rowDataConsultant != null) {
-                flagsOnChange.set(1,phoneString.get().equals(rowDataConsultant.getPhone()));
+            if (rowDataConsultantTable != null) {
+                flagsOnChange.set(1,phoneString.get().equals(rowDataConsultantTable.getPhone()));
             }
 
-            filteredData.setPredicate(consultant -> {
-
-                if (phoneString.get()==null) {
-                    return true;
-                }
-
-                return isConfidence(consultant,nameString,phoneString,ratingValue);
-            });
+            filteredData.setPredicate(consultantTable -> isConfidence(consultantTable,nameString,phoneString,ratingValue));
         });
 
         ratingSpinner.valueProperty().addListener((observable, oldValue, newValue) -> {
@@ -191,26 +175,21 @@ public class ConsultantsController implements Initializable {
 
             flagsOnSearch.set(2, ratingValue.get() == nullSpinnerValue);
 
-            if (rowDataConsultant != null) {
-                flagsOnChange.set(2,ratingValue.get()==rowDataConsultant.getRating());
+            if (rowDataConsultantTable != null) {
+                flagsOnChange.set(2,ratingValue.get()== rowDataConsultantTable.getRating());
+                System.out.println(flagsOnChange);
             }
 
-            filteredData.setPredicate(consultant -> {
-                    if (ratingValue.get()==nullSpinnerValue) {
-                        return true;
-                    }
-
-                    return isConfidence(consultant,nameString,phoneString,ratingValue);
-            });
+            filteredData.setPredicate(consultantTable -> isConfidence(consultantTable,nameString,phoneString,ratingValue));
         });
 
-        SortedList<Consultant> sortedData = new SortedList<>(filteredData);
+        SortedList<ConsultantTable> sortedData = new SortedList<>(filteredData);
 
         sortedData.comparatorProperty().bind(consultantsTable.comparatorProperty());
         consultantsTable.setItems(sortedData);
 
         consultantsTable.setRowFactory(param -> {
-            TableRow<Consultant> row = new TableRow<>();
+            TableRow<ConsultantTable> row = new TableRow<>();
 
             resetButton.setOnAction(actionEvent -> {
                 convertChgToAdd();
@@ -222,7 +201,7 @@ public class ConsultantsController implements Initializable {
             row.setOnMouseClicked(mouseEvent -> Optional.ofNullable(row.getItem()).ifPresent(rowData -> {
                 if (mouseEvent.getClickCount() == 2 && rowData.equals(consultantsTable.getSelectionModel().getSelectedItem())) {
                     showRstButton();
-                    rowDataConsultant = rowData;
+                    rowDataConsultantTable = rowData;
                     addBuyerToFields();
                     prepareTableForChanges();
                     convertAddToChg();
@@ -233,27 +212,38 @@ public class ConsultantsController implements Initializable {
         });
     }
 
-    private boolean isConfidence(Consultant consultant, AtomicReference<String> nameString, AtomicReference<String> phoneString, AtomicReference<Double> ratingValue) {
-        return consultant.getRating() == ratingValue.get() &&
-                consultant.getName().contains(nameString.get()) &&
-                consultant.getPhone().contains(phoneString.get());
+    private boolean isConfidence(ConsultantTable consultantTable, AtomicReference<String> nameString, AtomicReference<String> phoneString, AtomicReference<Double> ratingValue) {
+        return (ratingValue.get()==nullSpinnerValue || consultantTable.getRating() == ratingValue.get()) &&
+                consultantTable.getName().contains(nameString.get()) &&
+                consultantTable.getPhone().contains(phoneString.get());
+    }
+
+    private void setFlags() {
+        for (int i = 0; i < 3; ++i) {
+            flagsOnSearch.add(true);
+            flagsOnChange.add(false);
+        }
     }
 
     private void onAddEvent() {
-        data.add(databaseHandler.insertAndGetConsultant(new Consultant(nameField.getText(), phoneField.getText(), ratingSpinner.getValue())));
-        consultantsTable.setItems(data);
-        flagsOnChange.setAll(false);
+        data.add(databaseHandler.insertAndGetConsultant(new ConsultantTable(nameField.getText(), phoneField.getText(), ratingSpinner.getValue())));
+        setFlags();
         clearFields();
+        setRowDataNull();
+    }
+
+    private void setRowDataNull() {
+        rowDataConsultantTable =null;
     }
 
     private void prepareTableForChanges() {
-        phoneList.remove(rowDataConsultant.getPhone());
+        phoneList.remove(rowDataConsultantTable.getPhone());
     }
 
     private void resetChanges() {
-        phoneList.add(rowDataConsultant.getPhone());
-        flagsOnChange.setAll(false);
-        rowDataConsultant = null;
+        phoneList.add(rowDataConsultantTable.getPhone());
+        setFlags();
+        setRowDataNull();
     }
 
     private void onChangeEvent() {
@@ -261,21 +251,21 @@ public class ConsultantsController implements Initializable {
         updateRowDataConsultant();
         hideRstButton();
         addBuyerInf();
-        databaseHandler.updateConsultant(rowDataConsultant);
+        databaseHandler.updateConsultant(rowDataConsultantTable);
         convertChgToAdd();
         clearFields();
-        rowDataConsultant = null;
+        setRowDataNull();
     }
 
     private void updateRowDataConsultant() {
-        rowDataConsultant.setName(nameField.getText());
-        rowDataConsultant.setPhone(phoneField.getText());
-        rowDataConsultant.setRating(ratingSpinner.getValue());
+        rowDataConsultantTable.setName(nameField.getText());
+        rowDataConsultantTable.setPhone(phoneField.getText());
+        rowDataConsultantTable.setRating(ratingSpinner.getValue());
     }
 
     private void clearFields() {
-        nameField.clear();
-        phoneField.clear();
+        nameField.setText(emptyString);
+        phoneField.setText(emptyString);
         ratingSpinner.getValueFactory().setValue(nullSpinnerValue);
     }
 
@@ -286,8 +276,8 @@ public class ConsultantsController implements Initializable {
     }
 
     private void addBuyerInf() {
-        data.add(rowDataConsultant);
-        phoneList.add(rowDataConsultant.getPhone());
+        data.add(rowDataConsultantTable);
+        phoneList.add(rowDataConsultantTable.getPhone());
     }
 
     private void hideRstButton() {
@@ -307,12 +297,12 @@ public class ConsultantsController implements Initializable {
     }
 
     private void deleteBuyerInf() {
-        data.remove(rowDataConsultant);
+        data.remove(rowDataConsultantTable);
     }
 
     private void addBuyerToFields() {
-        nameField.setText(rowDataConsultant.getName());
-        phoneField.setText(rowDataConsultant.getPhone());
-        ratingSpinner.getValueFactory().setValue(rowDataConsultant.getRating());
+        nameField.setText(rowDataConsultantTable.getName());
+        phoneField.setText(rowDataConsultantTable.getPhone());
+        ratingSpinner.getValueFactory().setValue(rowDataConsultantTable.getRating());
     }
 }

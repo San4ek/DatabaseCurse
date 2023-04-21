@@ -11,7 +11,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
-import org.example.Database.Classes.ClassesForDatabase.Tables.Brand;
+import org.example.Database.Classes.ClassesForDatabase.Tables.BrandTable;
 import org.example.Database.Classes.ConfigClasses.UnaryOperators;
 import org.example.Database.Classes.HandlerClasses.DatabaseHandler;
 import org.example.Database.Enums.EnumsForDatabase.Tables.Brands;
@@ -27,9 +27,9 @@ import java.util.ResourceBundle;
 import java.util.concurrent.atomic.AtomicReference;
 
 
-public class BrandsController implements Initializable {
+public class BrandsTableController implements Initializable {
 
-    private final ObservableList<Brand> data = FXCollections.observableArrayList();
+    private final ObservableList<BrandTable> data = FXCollections.observableArrayList();
     private final DatabaseHandler databaseHandler = new DatabaseHandler();
     private final ResultSet brands= databaseHandler.selectBrands();
 
@@ -46,34 +46,35 @@ public class BrandsController implements Initializable {
     private Button addButton;
 
     @FXML
-    private TableColumn<Brand, String> brandColumn;
+    private TableColumn<BrandTable, String> brandColumn;
 
     @FXML
-    private TableView<Brand> brandTable;
+    private TableView<BrandTable> brandTable;
 
     @FXML
-    private TableColumn<Brand, Brand> deleteColumn;
+    private TableColumn<BrandTable, BrandTable> deleteColumn;
 
     @FXML
-    private TableColumn<Brand, Integer> idColumn;
+    private TableColumn<BrandTable, Integer> idColumn;
 
     private final ArrayList<String> brandList = new ArrayList<>();
-    private Brand rowDataBrand = null;
+    private BrandTable rowDataBrandTable = null;
     private final ObservableList<Boolean> flagsOnSearch = FXCollections.observableArrayList();
     private final ObservableList<Boolean> flagsOnChange = FXCollections.observableArrayList();
+
+    private final String emptyString="";
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
 
         hideRstButton();
 
-        flagsOnSearch.add(true);
-        flagsOnChange.add(false);
+        setFlags();
 
-        AddInformation<ResultSet, ObservableList<Brand>> information=(brands, data) -> {
+        AddInformation<ResultSet, ObservableList<BrandTable>> information=(brands, data) -> {
             try {
                 while (brands.next()) {
-                    data.add(new Brand(brands.getInt(1), brands.getString(2)));
+                    data.add(new BrandTable(brands.getInt(1), brands.getString(2)));
                     brandList.add(brands.getString(2));
                 }
             } catch (SQLException e) {
@@ -82,8 +83,8 @@ public class BrandsController implements Initializable {
         };
         information.addInf(brands,data);
 
-        flagsOnSearch.addListener((ListChangeListener<Boolean>) change -> addButton.setDisable(flagsOnChange.contains(true) || flagsOnSearch.contains(true)));
-        flagsOnChange.addListener((ListChangeListener<Boolean>) change -> addButton.setDisable(flagsOnChange.contains(true) || flagsOnSearch.contains(true)));
+        flagsOnSearch.addListener((ListChangeListener<Boolean>) change -> addButton.setDisable(flagsOnSearch.contains(true)));
+        flagsOnChange.addListener((ListChangeListener<Boolean>) change -> addButton.setDisable(!flagsOnChange.contains(false)));
 
         backButton.setOnAction(actionEvent -> Scenes.TABLES_MENU.setScene((Stage) backButton.getScene().getWindow()));
 
@@ -98,10 +99,10 @@ public class BrandsController implements Initializable {
             private final Button deleteButton = new Button("Delete");
 
             @Override
-            protected void updateItem(Brand brand, boolean empty) {
-                super.updateItem(brand, empty);
+            protected void updateItem(BrandTable brandTable, boolean empty) {
+                super.updateItem(brandTable, empty);
 
-                if (brand == null) {
+                if (brandTable == null) {
                     setGraphic(null);
                     return;
                 }
@@ -109,39 +110,40 @@ public class BrandsController implements Initializable {
                 setGraphic(deleteButton);
 
                 deleteButton.setOnAction(event -> {
-                    (new Thread(()->databaseHandler.deleteBrand(brand))).start();
-                    brandList.remove(brand.getBrand());
+                    (new Thread(()->databaseHandler.deleteBrand(brandTable))).start();
+                    brandList.remove(brandTable.getBrand());
 
-                    data.remove(brand);
+                    data.remove(brandTable);
                 });
             }
         });
 
-        FilteredList<Brand> filteredData = new FilteredList<>(data, b -> true);
+        FilteredList<BrandTable> filteredData = new FilteredList<>(data);
 
-        AtomicReference<String> brandString = new AtomicReference<>("");
+        AtomicReference<String> brandString = new AtomicReference<>(emptyString);
 
         brandField.setTextFormatter(new TextFormatter<>(UnaryOperators.getBrandValidationFormatter()));
         brandField.textProperty().addListener((observable, oldValue, newValue) -> {
 
             brandString.set(newValue);
 
-            flagsOnSearch.set(0, brandString.get() == null || brandList.contains(brandString.get()));
+            System.out.println(newValue);
+            flagsOnSearch.set(0, brandString.get().equals(emptyString) || brandList.contains(brandString.get()));
 
-            if (rowDataBrand != null) {
-                flagsOnChange.set(0,brandString.get().equalsIgnoreCase(rowDataBrand.getBrand()));
+            if (rowDataBrandTable != null) {
+                flagsOnChange.set(0,brandString.get().equalsIgnoreCase(rowDataBrandTable.getBrand()));
             }
 
-            filteredData.setPredicate(brand -> isCoincidence(brand,brandString));
+            filteredData.setPredicate(brandTable -> isCoincidence(brandTable,brandString));
         });
 
-        SortedList<Brand> sortedData = new SortedList<>(filteredData);
+        SortedList<BrandTable> sortedData = new SortedList<>(filteredData);
 
         sortedData.comparatorProperty().bind(brandTable.comparatorProperty());
         brandTable.setItems(sortedData);
 
         brandTable.setRowFactory(param -> {
-            TableRow<Brand> row = new TableRow<>();
+            TableRow<BrandTable> row = new TableRow<>();
 
             resetButton.setOnAction(actionEvent -> {
                 convertChgToAdd();
@@ -153,7 +155,7 @@ public class BrandsController implements Initializable {
             row.setOnMouseClicked(mouseEvent -> Optional.ofNullable(row.getItem()).ifPresent(rowData -> {
                 if (mouseEvent.getClickCount() == 2 && rowData.equals(brandTable.getSelectionModel().getSelectedItem())) {
                     showRstButton();
-                    rowDataBrand = rowData;
+                    rowDataBrandTable = rowData;
                     addBrandToFields();
                     prepareTableForChanges();
                     convertAddToChg();
@@ -164,25 +166,36 @@ public class BrandsController implements Initializable {
         });
     }
 
-    private boolean isCoincidence(Brand brand, AtomicReference<String> brandString) {
-        return brandString.get() == null || brand.getBrand().toLowerCase().contains(brandString.get().toLowerCase());
+    private boolean isCoincidence(BrandTable brandTable, AtomicReference<String> brandString) {
+        return brandTable.getBrand().toLowerCase().contains(brandString.get().toLowerCase());
+    }
+
+    private void setFlags() {
+        for (int i = 0; i < 1; ++i) {
+            flagsOnSearch.add(true);
+            flagsOnChange.add(false);
+        }
     }
 
     void onAddEvent() {
-        data.add(databaseHandler.insertAndGetBrand(new Brand(brandField.getText())));
-        brandTable.setItems(data);
-        flagsOnChange.setAll(false);
+        data.add(databaseHandler.insertAndGetBrand(new BrandTable(brandField.getText())));
+        setFlags();
         clearFields();
+        setRowDataNull();
+    }
+
+    private void setRowDataNull() {
+        rowDataBrandTable =null;
     }
 
     private void prepareTableForChanges() {
-        brandList.remove(rowDataBrand.getBrand());
+        brandList.remove(rowDataBrandTable.getBrand());
     }
 
     private void resetChanges() {
-        brandList.add(rowDataBrand.getBrand());
-        flagsOnChange.setAll(false);
-        rowDataBrand = null;
+        brandList.add(rowDataBrandTable.getBrand());
+        setFlags();
+        setRowDataNull();
     }
 
     private void onChangeEvent() {
@@ -190,18 +203,18 @@ public class BrandsController implements Initializable {
         updateRowDataBrand();
         hideRstButton();
         addBrandInf();
-        databaseHandler.updateBrand(rowDataBrand);
+        databaseHandler.updateBrand(rowDataBrandTable);
         convertChgToAdd();
         clearFields();
-        rowDataBrand = null;
+        setRowDataNull();
     }
 
     private void updateRowDataBrand() {
-        rowDataBrand.setBrand(brandField.getText());
+        rowDataBrandTable.setBrand(brandField.getText());
     }
 
     private void clearFields() {
-        brandField.clear();
+        brandField.setText(emptyString);
     }
 
     private void convertChgToAdd() {
@@ -211,8 +224,8 @@ public class BrandsController implements Initializable {
     }
 
     private void addBrandInf() {
-        data.add(rowDataBrand);
-        brandList.add(rowDataBrand.getBrand());
+        data.add(rowDataBrandTable);
+        brandList.add(rowDataBrandTable.getBrand());
     }
 
     private void hideRstButton() {
@@ -232,10 +245,10 @@ public class BrandsController implements Initializable {
     }
 
     private void deleteBrandInf() {
-        data.remove(rowDataBrand);
+        data.remove(rowDataBrandTable);
     }
 
     private void addBrandToFields() {
-        brandField.setText(rowDataBrand.getBrand());
+        brandField.setText(rowDataBrandTable.getBrand());
     }
 }

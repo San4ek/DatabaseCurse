@@ -1,15 +1,15 @@
 package org.example.Database.Classes.ClassesForDatabase.Tables;
 
-public class TypeOfGadget {
+public class TypeOfGadgetTable {
     private int ID;
     private final String Type;
 
-    public TypeOfGadget(int ID, String type) {
+    public TypeOfGadgetTable(int ID, String type) {
         this.ID = ID;
         Type = type;
     }
 
-    public TypeOfGadget(String type) {
+    public TypeOfGadgetTable(String type) {
         Type = type;
     }
 

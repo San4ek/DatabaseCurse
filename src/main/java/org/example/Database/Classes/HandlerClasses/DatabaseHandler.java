@@ -3,6 +3,7 @@ package org.example.Database.Classes.HandlerClasses;
 import org.example.Database.Classes.ClassesForDatabase.Tables.*;
 import org.example.Database.Enums.ConfigEnums.DatabaseConfigs;
 import org.example.Database.Enums.EnumsForDatabase.Tables.*;
+import org.example.Database.Enums.EnumsForDatabase.Views.Views;
 
 import java.lang.reflect.InvocationTargetException;
 import java.sql.*;
@@ -41,28 +42,28 @@ public class DatabaseHandler {
         return resSet;
     }
 
-    public Brand insertAndGetBrand(Brand brand) {
+    public BrandTable insertAndGetBrand(BrandTable brandTable) {
         comandString = "INSERT INTO "+Tables.BRANDS.getTitle()+"("+ Brands.BRAND.getTitle()+") VALUES (?)";
         try {
             prSt = getConnection().prepareStatement(comandString);
-            prSt.setString(1, brand.getBrand());
+            prSt.setString(1, brandTable.getBrand());
             prSt.executeUpdate();
 
-            resSet=getBrandID(brand);
+            resSet=getBrandID(brandTable);
             resSet.next();
-            brand.setID(resSet.getInt(1));
+            brandTable.setID(resSet.getInt(1));
         } catch (SQLException e) {
             e.printStackTrace();
         }
 
-        return brand;
+        return brandTable;
     }
 
-    private ResultSet getBrandID(Brand brand) {
+    private ResultSet getBrandID(BrandTable brandTable) {
         comandString="SELECT * FROM "+Tables.BRANDS.getTitle()+" WHERE "+Brands.BRAND.getTitle()+"=?";
         try {
             prSt = getConnection().prepareStatement(comandString);
-            prSt.setString(1,brand.getBrand());
+            prSt.setString(1, brandTable.getBrand());
 
             resSet=prSt.executeQuery();
         } catch (SQLException e) {
@@ -72,11 +73,11 @@ public class DatabaseHandler {
         return resSet;
     }
 
-    public void deleteBrand(Brand brand) {
+    public void deleteBrand(BrandTable brandTable) {
         comandString="DELETE FROM "+Tables.BRANDS.getTitle()+" WHERE "+Brands.ID.getTitle()+"=?";
         try {
             prSt= getConnection().prepareStatement(comandString);
-            prSt.setString(1, String.valueOf(brand.getID()));
+            prSt.setString(1, String.valueOf(brandTable.getID()));
 
             prSt.executeUpdate();
         } catch (SQLException e) {
@@ -84,13 +85,13 @@ public class DatabaseHandler {
         }
     }
 
-    public void updateBrand(Brand brand) {
-        System.out.println(brand);
+    public void updateBrand(BrandTable brandTable) {
+        System.out.println(brandTable);
         comandString = "UPDATE "+Tables.BRANDS.getTitle()+" SET "+Brands.BRAND.getTitle()+"=? WHERE "+Brands.ID.getTitle()+"=?";
         try {
             prSt = getConnection().prepareStatement(comandString);
-            prSt.setString(1, brand.getBrand());
-            prSt.setString(2, String.valueOf(brand.getID()));
+            prSt.setString(1, brandTable.getBrand());
+            prSt.setString(2, String.valueOf(brandTable.getID()));
 
             prSt.executeUpdate();
         } catch (SQLException e) {
@@ -111,11 +112,11 @@ public class DatabaseHandler {
         return resSet;
     }
 
-    private ResultSet getBuyerID(Buyer buyer) {
+    private ResultSet getBuyerID(BuyerTable buyerTable) {
         comandString="SELECT * FROM "+Tables.BUYERS.getTitle()+" WHERE "+ Buyers.PHONE.getTitle()+"=?";
         try {
             prSt = getConnection().prepareStatement(comandString);
-            prSt.setString(1,buyer.getPhone());
+            prSt.setString(1, buyerTable.getPhone());
 
             resSet=prSt.executeQuery();
         } catch (SQLException e) {
@@ -125,31 +126,31 @@ public class DatabaseHandler {
         return resSet;
     }
 
-    public Buyer insertAndGetBuyer(Buyer buyer) {
+    public BuyerTable insertAndGetBuyer(BuyerTable buyerTable) {
         comandString = "INSERT INTO "+Tables.BUYERS.getTitle()+"("+Buyers.NAME.getTitle()+"," +
                 Buyers.PHONE.getTitle()+","+Buyers.EMAIL.getTitle()+") VALUES (?,?,?)";
         try {
             prSt = getConnection().prepareStatement(comandString);
-            prSt.setString(1, buyer.getName());
-            prSt.setString(2,buyer.getPhone());
-            prSt.setString(3,buyer.getEmail());
+            prSt.setString(1, buyerTable.getName());
+            prSt.setString(2, buyerTable.getPhone());
+            prSt.setString(3, buyerTable.getEmail());
             prSt.executeUpdate();
 
-            resSet=getBuyerID(buyer);
+            resSet=getBuyerID(buyerTable);
             resSet.next();
-            buyer.setID(resSet.getInt(1));
+            buyerTable.setID(resSet.getInt(1));
         } catch (SQLException e) {
             e.printStackTrace();
         }
 
-        return buyer;
+        return buyerTable;
     }
 
-    public void deleteBuyer(Buyer buyer) {
+    public void deleteBuyer(BuyerTable buyerTable) {
         comandString="DELETE FROM "+Tables.BUYERS.getTitle()+" WHERE "+Buyers.ID.getTitle()+"=?";
         try {
             prSt= getConnection().prepareStatement(comandString);
-            prSt.setString(1, String.valueOf(buyer.getID()));
+            prSt.setString(1, String.valueOf(buyerTable.getID()));
 
             prSt.executeUpdate();
         } catch (SQLException e) {
@@ -157,14 +158,14 @@ public class DatabaseHandler {
         }
     }
 
-    public void updateBuyer(Buyer buyer) {
+    public void updateBuyer(BuyerTable buyerTable) {
         comandString = "UPDATE "+Tables.BUYERS.getTitle()+" SET "+Buyers.NAME.getTitle()+"=?,"+Buyers.PHONE.getTitle()+"=?,"+Buyers.EMAIL.getTitle()+"=? WHERE "+Buyers.ID.getTitle()+"=?";
         try {
             prSt = getConnection().prepareStatement(comandString);
-            prSt.setString(1, buyer.getName());
-            prSt.setString(2,buyer.getPhone());
-            prSt.setString(3,buyer.getEmail());
-            prSt.setString(4, String.valueOf(buyer.getID()));
+            prSt.setString(1, buyerTable.getName());
+            prSt.setString(2, buyerTable.getPhone());
+            prSt.setString(3, buyerTable.getEmail());
+            prSt.setString(4, String.valueOf(buyerTable.getID()));
 
             prSt.executeUpdate();
         } catch (SQLException e) {
@@ -185,11 +186,11 @@ public class DatabaseHandler {
         return resSet;
     }
 
-    public void deleteConsultant(Consultant consultant) {
+    public void deleteConsultant(ConsultantTable consultantTable) {
         comandString="DELETE FROM "+Tables.CONSULTANTS.getTitle()+" WHERE "+Buyers.ID.getTitle()+"=?";
         try {
             prSt= getConnection().prepareStatement(comandString);
-            prSt.setString(1, String.valueOf(consultant.getID()));
+            prSt.setString(1, String.valueOf(consultantTable.getID()));
 
             prSt.executeUpdate();
         } catch (SQLException e) {
@@ -197,52 +198,54 @@ public class DatabaseHandler {
         }
     }
 
-    private ResultSet getConsultantID(Consultant consultant) {
+    private ResultSet getConsultantID(ConsultantTable consultantTable) {
         comandString="SELECT * FROM "+Tables.CONSULTANTS.getTitle()+" WHERE "+ Consultants.PHONE.getTitle()+"=?";
         try {
             prSt = getConnection().prepareStatement(comandString);
-            prSt.setString(1,consultant.getPhone());
+            prSt.setString(1, consultantTable.getPhone());
 
             resSet=prSt.executeQuery();
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
 
         return resSet;
     }
 
-    public Consultant insertAndGetConsultant(Consultant consultant) {
+    public ConsultantTable insertAndGetConsultant(ConsultantTable consultantTable) {
         comandString = "INSERT INTO "+Tables.CONSULTANTS.getTitle()+"("+ Consultants.NAME.getTitle()+"," +
                 Consultants.PHONE.getTitle()+","+Consultants.RATING.getTitle()+") VALUES (?,?,?)";
+
         try {
             prSt = getConnection().prepareStatement(comandString);
-            prSt.setString(1, consultant.getName());
-            prSt.setString(2,consultant.getPhone());
-            prSt.setString(3, String.valueOf(consultant.getRating()));
+            prSt.setString(1, consultantTable.getName());
+            prSt.setString(2, consultantTable.getPhone());
+            prSt.setString(3, String.valueOf(consultantTable.getRating()));
             prSt.executeUpdate();
 
-            resSet=getConsultantID(consultant);
+            resSet=getConsultantID(consultantTable);
             resSet.next();
-            consultant.setID(resSet.getInt(1));
+            consultantTable.setID(resSet.getInt(1));
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
 
-        return consultant;
+        return consultantTable;
     }
 
-    public void updateConsultant(Consultant consultant) {
+    public void updateConsultant(ConsultantTable consultantTable) {
         comandString = "UPDATE "+Tables.CONSULTANTS.getTitle()+" SET "+Consultants.NAME+"=?,"+Consultants.PHONE+"=?,"+Consultants.RATING+"=? WHERE "+Consultants.ID+"=?";
+
         try {
             prSt = getConnection().prepareStatement(comandString);
-            prSt.setString(1, consultant.getName());
-            prSt.setString(2, consultant.getPhone());
-            prSt.setString(3, String.valueOf(consultant.getRating()));
-            prSt.setString(4, String.valueOf(consultant.getID()));
+            prSt.setString(1, consultantTable.getName());
+            prSt.setString(2, consultantTable.getPhone());
+            prSt.setString(3, String.valueOf(consultantTable.getRating()));
+            prSt.setString(4, String.valueOf(consultantTable.getID()));
 
             prSt.executeUpdate();
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
     }
 
@@ -259,11 +262,11 @@ public class DatabaseHandler {
         return resSet;
     }
 
-    public void deleteCountry(Country country) {
+    public void deleteCountry(CountryTable countryTable) {
         comandString="DELETE FROM "+Tables.COUNTRIES.getTitle()+" WHERE "+ Countries.ID.getTitle()+"=?";
         try {
             prSt= getConnection().prepareStatement(comandString);
-            prSt.setString(1, String.valueOf(country.getID()));
+            prSt.setString(1, String.valueOf(countryTable.getID()));
 
             prSt.executeUpdate();
         } catch (SQLException e) {
@@ -271,46 +274,47 @@ public class DatabaseHandler {
         }
     }
 
-    public Country insertAndGetCountry(Country countryOfManufacture) {
+    public CountryTable insertAndGetCountry(CountryTable countryTableOfManufacture) {
         comandString = "INSERT INTO "+Tables.COUNTRIES.getTitle()+"("+ Countries.COUNTRY.getTitle()+") VALUES (?)";
         try {
             prSt = getConnection().prepareStatement(comandString);
-            prSt.setString(1, countryOfManufacture.getCountry());
+            prSt.setString(1, countryTableOfManufacture.getCountry());
             prSt.executeUpdate();
 
-            resSet=getCountryID(countryOfManufacture);
+            resSet=getCountryID(countryTableOfManufacture);
             resSet.next();
-            countryOfManufacture.setID(resSet.getInt(1));
+            countryTableOfManufacture.setID(resSet.getInt(1));
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
 
-        return countryOfManufacture;
+        return countryTableOfManufacture;
     }
-    private ResultSet getCountryID(Country countryOfManufacture) {
+    private ResultSet getCountryID(CountryTable countryTableOfManufacture) {
         comandString="SELECT * FROM "+Tables.COUNTRIES.getTitle()+" WHERE "+ Countries.COUNTRY.getTitle()+"=?";
         try {
             prSt = getConnection().prepareStatement(comandString);
-            prSt.setString(1, countryOfManufacture.getCountry());
+            prSt.setString(1, countryTableOfManufacture.getCountry());
 
             resSet=prSt.executeQuery();
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
 
         return resSet;
     }
 
-    public void updateCountry(Country country) {
+    public void updateCountry(CountryTable countryTable) {
         comandString = "UPDATE "+Tables.COUNTRIES.getTitle()+" SET "+ Countries.COUNTRY.getTitle()+"=? WHERE "+ Countries.ID.getTitle()+"=?";
+
         try {
             prSt = getConnection().prepareStatement(comandString);
-            prSt.setString(1, country.getCountry());
-            prSt.setString(2, String.valueOf(country.getID()));
+            prSt.setString(1, countryTable.getCountry());
+            prSt.setString(2, String.valueOf(countryTable.getID()));
 
             prSt.executeUpdate();
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
     }
 
@@ -327,7 +331,7 @@ public class DatabaseHandler {
         return resSet;
     }
 
-    public void deleteType(TypeOfGadget type) {
+    public void deleteType(TypeOfGadgetTable type) {
         comandString="DELETE FROM "+Tables.TYPES.getTitle()+" WHERE "+ TypesOfGadgets.ID.getTitle()+"=?";
         try {
             prSt= getConnection().prepareStatement(comandString);
@@ -339,7 +343,7 @@ public class DatabaseHandler {
         }
     }
 
-    public TypeOfGadget insertAndGetType(TypeOfGadget type) {
+    public TypeOfGadgetTable insertAndGetType(TypeOfGadgetTable type) {
         comandString = "INSERT INTO "+Tables.TYPES.getTitle()+"("+ TypesOfGadgets.TYPE.getTitle()+") VALUES (?)";
         try {
             prSt = getConnection().prepareStatement(comandString);
@@ -350,13 +354,13 @@ public class DatabaseHandler {
             resSet.next();
             type.setID(resSet.getInt(1));
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
 
         return type;
     }
 
-    private ResultSet getTypeID(TypeOfGadget type) {
+    private ResultSet getTypeID(TypeOfGadgetTable type) {
         comandString="SELECT * FROM "+Tables.TYPES.getTitle()+" WHERE "+ TypesOfGadgets.TYPE.getTitle()+"=?";
         try {
             prSt = getConnection().prepareStatement(comandString);
@@ -364,13 +368,13 @@ public class DatabaseHandler {
 
             resSet=prSt.executeQuery();
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
 
         return resSet;
     }
 
-    public void updateType(TypeOfGadget type) {
+    public void updateType(TypeOfGadgetTable type) {
         comandString = "UPDATE "+Tables.TYPES.getTitle()+" SET "+TypesOfGadgets.TYPE.getTitle()+"=? WHERE "+TypesOfGadgets.ID.getTitle()+"=?";
         try {
             prSt = getConnection().prepareStatement(comandString);
@@ -379,7 +383,7 @@ public class DatabaseHandler {
 
             prSt.executeUpdate();
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
     }
 
@@ -433,7 +437,7 @@ public class DatabaseHandler {
             resSet.next();
             gadgetTable.setID(resSet.getInt(1));
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
 
         return gadgetTable;
@@ -446,8 +450,9 @@ public class DatabaseHandler {
             prSt.setString(1, gadgetTable.getName());
 
             resSet=prSt.executeQuery();
+
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
 
         return resSet;
@@ -476,7 +481,7 @@ public class DatabaseHandler {
 
             prSt.executeUpdate();
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
     }
 
@@ -493,11 +498,11 @@ public class DatabaseHandler {
         return resSet;
     }
 
-    public void deleteProvider(Provider provider) {
+    public void deleteProvider(ProviderTable providerTable) {
         comandString="DELETE FROM "+Tables.PROVIDERS.getTitle()+" WHERE "+ Providers.ID.getTitle()+"=?";
         try {
             prSt= getConnection().prepareStatement(comandString);
-            prSt.setString(1, String.valueOf(provider.getID()));
+            prSt.setString(1, String.valueOf(providerTable.getID()));
 
             prSt.executeUpdate();
         } catch (SQLException e) {
@@ -505,59 +510,59 @@ public class DatabaseHandler {
         }
     }
 
-    public Provider insertAndGetProvider(Provider provider) {
+    public ProviderTable insertAndGetProvider(ProviderTable providerTable) {
         comandString = "INSERT INTO "+Tables.PROVIDERS.getTitle()+"("+Providers.NAME.getTitle()+","+
                 Providers.PHONE_NUMBER.getTitle()+","+
                 Providers.EMAIL.getTitle()+","+
                 Providers.COUNTRY.getTitle()+") VALUES (?,?,?,?)";
         try {
             prSt = getConnection().prepareStatement(comandString);
-            prSt.setString(1, provider.getName());
-            prSt.setString(2, provider.getPhone());
-            prSt.setString(3, provider.getEmail());
-            prSt.setString(4, String.valueOf(provider.getCountry()));
+            prSt.setString(1, providerTable.getName());
+            prSt.setString(2, providerTable.getPhone());
+            prSt.setString(3, providerTable.getEmail());
+            prSt.setString(4, String.valueOf(providerTable.getCountry()));
             prSt.executeUpdate();
 
-            resSet=insertProviderID(provider);
+            resSet=insertProviderID(providerTable);
             resSet.next();
-            provider.setID(resSet.getInt(1));
+            providerTable.setID(resSet.getInt(1));
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
 
-        return provider;
+        return providerTable;
     }
 
-    private ResultSet insertProviderID(Provider provider) {
+    private ResultSet insertProviderID(ProviderTable providerTable) {
         comandString="SELECT * FROM "+Tables.PROVIDERS.getTitle()+" WHERE "+ Providers.NAME.getTitle()+"=?";
         try {
             prSt = getConnection().prepareStatement(comandString);
-            prSt.setString(1, provider.getName());
+            prSt.setString(1, providerTable.getName());
 
             resSet=prSt.executeQuery();
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
 
         return resSet;
     }
 
-    public void updateProvider(Provider provider) {
-        comandString = "UPDATE "+Tables.PROVIDERS.getTitle()+" SET "+
-                Providers.NAME.getTitle()+"=?,"+
-                Providers.PHONE_NUMBER.getTitle()+"=?,"+
-                Providers.EMAIL.getTitle()+"=?,"+
-                Providers.COUNTRY.getTitle()+"=? WHERE "+Gadgets.ID.getTitle()+"=?";
+    public void updateProvider(ProviderTable providerTable) {
+        comandString = "UPDATE " + Tables.PROVIDERS.getTitle() + " SET " +
+                Providers.NAME.getTitle() + "=?," +
+                Providers.PHONE_NUMBER.getTitle() + "=?," +
+                Providers.EMAIL.getTitle() + "=?," +
+                Providers.COUNTRY.getTitle() + "=? WHERE " + Gadgets.ID.getTitle() + "=?";
         try {
             prSt = getConnection().prepareStatement(comandString);
-            prSt.setString(1, provider.getName());
-            prSt.setString(2, provider.getPhone());
-            prSt.setString(3, provider.getEmail());
-            prSt.setString(4, String.valueOf(provider.getCountry()));
+            prSt.setString(1, providerTable.getName());
+            prSt.setString(2, providerTable.getPhone());
+            prSt.setString(3, providerTable.getEmail());
+            prSt.setString(4, String.valueOf(providerTable.getCountry()));
 
             prSt.executeUpdate();
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
     }
 
@@ -587,11 +592,11 @@ public class DatabaseHandler {
     }
 
     public PurchaseTable insertAndGetPurchase(PurchaseTable purchaseTable) {
-        comandString = "INSERT INTO "+Tables.PURCHASES.getTitle()+"("+Purchases.GADGET.getTitle()+","+
-                Purchases.DATE.getTitle()+","+
-                Purchases.PAYMENT.getTitle()+","+
-                Purchases.BUYER.getTitle()+","+
-                Purchases.CONSULTANT.getTitle()+") VALUES (?,?,?,?,?)";
+        comandString = "INSERT INTO " + Tables.PURCHASES.getTitle() + "(" + Purchases.GADGET.getTitle() + "," +
+                Purchases.DATE.getTitle() + "," +
+                Purchases.PAYMENT.getTitle() + "," +
+                Purchases.BUYER.getTitle() + "," +
+                Purchases.CONSULTANT.getTitle() + ") VALUES (?,?,?,?,?)";
         try {
             prSt = getConnection().prepareStatement(comandString);
             prSt.setString(1, String.valueOf(purchaseTable.getGadget()));
@@ -601,37 +606,37 @@ public class DatabaseHandler {
             prSt.setString(5, String.valueOf(purchaseTable.getConsultant()));
             prSt.executeUpdate();
 
-            resSet=insertPurchaseID(purchaseTable);
+            resSet = insertPurchaseID(purchaseTable);
             resSet.afterLast();
             resSet.previous();
             purchaseTable.setID(resSet.getInt(1));
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
 
         return purchaseTable;
     }
 
     private ResultSet insertPurchaseID(PurchaseTable purchaseTable) {
-        comandString="SELECT * FROM "+Tables.PURCHASES.getTitle()+" WHERE "+ Purchases.DATE.getTitle()+"=?";
+        comandString = "SELECT * FROM " + Tables.PURCHASES.getTitle() + " WHERE " + Purchases.DATE.getTitle() + "=?";
         try {
             prSt = getConnection().prepareStatement(comandString);
             prSt.setString(1, String.valueOf(purchaseTable.getDate()));
 
-            resSet=prSt.executeQuery();
+            resSet = prSt.executeQuery();
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
 
         return resSet;
     }
 
     public ResultSet selectPayments() {
-        comandString="SELECT * FROM "+Tables.PAYMENTS.getTitle();
+        comandString = "SELECT * FROM " + Tables.PAYMENTS.getTitle();
         try {
-            prSt= getConnection().prepareStatement(comandString);
+            prSt = getConnection().prepareStatement(comandString);
 
-            resSet=prSt.executeQuery();
+            resSet = prSt.executeQuery();
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -639,11 +644,11 @@ public class DatabaseHandler {
         return resSet;
     }
 
-    public void deletePayment(Payment payment) {
-        comandString="DELETE FROM "+Tables.PAYMENTS.getTitle()+" WHERE "+ Payments.ID.getTitle()+"=?";
+    public void deletePayment(PaymentTable paymentTable) {
+        comandString = "DELETE FROM " + Tables.PAYMENTS.getTitle() + " WHERE " + Payments.ID.getTitle() + "=?";
         try {
-            prSt= getConnection().prepareStatement(comandString);
-            prSt.setString(1, String.valueOf(payment.getID()));
+            prSt = getConnection().prepareStatement(comandString);
+            prSt.setString(1, String.valueOf(paymentTable.getID()));
 
             prSt.executeUpdate();
         } catch (SQLException e) {
@@ -651,47 +656,60 @@ public class DatabaseHandler {
         }
     }
 
-    public Payment insertAndGetPayment(Payment payment) {
-        comandString = "INSERT INTO "+Tables.PAYMENTS.getTitle()+"("+Payments.PAYMENT.getTitle()+") VALUES (?)";
+    public PaymentTable insertAndGetPayment(PaymentTable paymentTable) {
+        comandString = "INSERT INTO " + Tables.PAYMENTS.getTitle() + "(" + Payments.PAYMENT.getTitle() + ") VALUES (?)";
         try {
             prSt = getConnection().prepareStatement(comandString);
-            prSt.setString(1,payment.getPayment());
+            prSt.setString(1, paymentTable.getPayment());
             prSt.executeUpdate();
 
-            resSet=insertPaymentID(payment);
+            resSet = insertPaymentID(paymentTable);
             resSet.next();
-            payment.setID(resSet.getInt(1));
+            paymentTable.setID(resSet.getInt(1));
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
 
-        return payment;
+        return paymentTable;
     }
 
-    private ResultSet insertPaymentID(Payment payment) {
-        comandString="SELECT * FROM "+Tables.PAYMENTS.getTitle()+" WHERE "+ Payments.PAYMENT.getTitle()+"=?";
+    private ResultSet insertPaymentID(PaymentTable paymentTable) {
+        comandString = "SELECT * FROM " + Tables.PAYMENTS.getTitle() + " WHERE " + Payments.PAYMENT.getTitle() + "=?";
         try {
             prSt = getConnection().prepareStatement(comandString);
-            prSt.setString(1, payment.getPayment());
+            prSt.setString(1, paymentTable.getPayment());
 
-            resSet=prSt.executeQuery();
+            resSet = prSt.executeQuery();
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
 
         return resSet;
     }
 
-    public void updatePayment(Payment payment) {
-        comandString = "UPDATE "+Tables.PAYMENTS.getTitle()+" SET "+
-                Payments.PAYMENT.getTitle()+"=? WHERE "+Payments.ID.getTitle()+"=?";
+    public void updatePayment(PaymentTable paymentTable) {
+        comandString = "UPDATE " + Tables.PAYMENTS.getTitle() + " SET " +
+                Payments.PAYMENT.getTitle() + "=? WHERE " + Payments.ID.getTitle() + "=?";
         try {
             prSt = getConnection().prepareStatement(comandString);
-            prSt.setString(1, payment.getPayment());
+            prSt.setString(1, paymentTable.getPayment());
 
             prSt.executeUpdate();
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
+    }
+
+    public ResultSet selectPurchasesView() {
+        comandString = "SELECT * FROM " + Views.GADGETS.getTitle();
+        try {
+            prSt = getConnection().prepareStatement(comandString);
+
+            resSet = prSt.executeQuery();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
+        return resSet;
     }
 }

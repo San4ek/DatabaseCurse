@@ -1,59 +1,59 @@
 package org.example.Database.Classes.ClassesForDatabase.Tables;
 
-public class Consultant {
+public class BuyerTable {
     private int ID;
     private String Name;
     private String Phone;
-    private double rating;
+    private String Email;
 
-    public Consultant(int ID, String name, String phone, double rating) {
+    public BuyerTable(int ID, String name, String phone, String email) {
         this.ID = ID;
         Name = name;
         Phone = phone;
-        this.rating = rating;
+        Email = email;
     }
 
-    public Consultant(String name, String phone, double rating) {
+    public BuyerTable(String name, String phone, String email) {
         Name = name;
         Phone = phone;
-        this.rating = rating;
+        Email = email;
     }
 
-    public Consultant(int ID, String name) {
+    public BuyerTable(int ID, String name) {
         this.ID=ID;
-        Name=name;
+        Name = name;
     }
 
     public int getID() {
         return ID;
     }
 
-    public String getName() {
-        return Name;
-    }
-
-    public String getPhone() {
-        return Phone;
-    }
-
-    public double getRating() {
-        return rating;
-    }
-
     public void setID(int ID) {
         this.ID = ID;
+    }
+
+    public String getName() {
+        return Name;
     }
 
     public void setName(String name) {
         Name = name;
     }
 
+    public String getPhone() {
+        return Phone;
+    }
+
     public void setPhone(String phone) {
         Phone = phone;
     }
 
-    public void setRating(double rating) {
-        this.rating = rating;
+    public String getEmail() {
+        return Email;
+    }
+
+    public void setEmail(String email) {
+        Email = email;
     }
 
     @Override
