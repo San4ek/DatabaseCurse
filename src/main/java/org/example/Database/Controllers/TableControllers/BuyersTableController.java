@@ -88,7 +88,7 @@ public class BuyersTableController implements Initializable {
 
         hideRstButton();
 
-        setFlags();
+        addFlags();
 
         AddInformation<ResultSet, ObservableList<BuyerTable>> information = (buyers, data) -> {
             try {
@@ -241,7 +241,7 @@ public class BuyersTableController implements Initializable {
                 buyerTable.getEmail().contains(emailString.get());
     }
 
-    private void setFlags() {
+    private void addFlags() {
         for (int i = 0; i < 3; ++i) {
             flagsOnSearch.add(true);
             flagsOnChange.add(false);
@@ -252,7 +252,7 @@ public class BuyersTableController implements Initializable {
         final BuyerTable buyerTable = new BuyerTable(nameField.getText(), phoneField.getText(), emailField.getText());
         if (EmailMessage.isSentMessage(ServerConfigs.LINK.getTitle() + ServerConfigs.PATH.getTitle(), emailField.getText(), ServerConfigs.GOAL.getTitle())) {
             WebServer.startWebServer(buyerTable, data);
-            setFlags();
+            phoneList.add(phoneField.getText());
             clearFields();
             setRowDataNull();
         } else messageLabel.setText(MessageConfig.NOT_APPROVED.getTitle());
@@ -268,7 +268,7 @@ public class BuyersTableController implements Initializable {
 
     private void resetChanges() {
         phoneList.add(rowDataBuyerTable.getPhone());
-        setFlags();
+        clearFields();
         setRowDataNull();
     }
 

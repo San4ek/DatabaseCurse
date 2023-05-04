@@ -66,7 +66,7 @@ public class TypesOfGadgetsTableController extends GadgetsViewController impleme
     public void initialize(URL url, ResourceBundle resourceBundle) {
         hideRstButton();
 
-        setFlags();
+        addFlags();
 
         AddInformation<ResultSet, ObservableList<TypeOfGadgetTable>> information=(types, data) -> {
             try {
@@ -166,7 +166,7 @@ public class TypesOfGadgetsTableController extends GadgetsViewController impleme
         return type.getType().toLowerCase().contains(typeValue.get().toLowerCase());
     }
 
-    private void setFlags() {
+    private void addFlags() {
         for (int i = 0; i < 1; ++i) {
             flagsOnSearch.add(true);
             flagsOnChange.add(false);
@@ -206,13 +206,12 @@ public class TypesOfGadgetsTableController extends GadgetsViewController impleme
 
     private void resetChanges() {
         typeList.add(rowDataType.getType());
-        setFlags();
+        clearField();
         setRowDataNull();
     }
 
     private void onAddEvent() {
         data.add(databaseHandler.insertAndGetType(new TypeOfGadgetTable(typeField.getText())));
-        setFlags();
         clearField();
         setRowDataNull();
     }

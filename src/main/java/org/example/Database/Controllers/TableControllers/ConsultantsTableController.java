@@ -79,7 +79,7 @@ public class ConsultantsTableController implements Initializable {
 
         hideRstButton();
 
-        setFlags();
+        addFlags();
 
         AddInformation<ResultSet, ObservableList<ConsultantTable>> information = (consultants, data) -> {
             try {
@@ -218,7 +218,7 @@ public class ConsultantsTableController implements Initializable {
                 consultantTable.getPhone().contains(phoneString.get());
     }
 
-    private void setFlags() {
+    private void addFlags() {
         for (int i = 0; i < 3; ++i) {
             flagsOnSearch.add(true);
             flagsOnChange.add(false);
@@ -227,7 +227,6 @@ public class ConsultantsTableController implements Initializable {
 
     private void onAddEvent() {
         data.add(databaseHandler.insertAndGetConsultant(new ConsultantTable(nameField.getText(), phoneField.getText(), ratingSpinner.getValue())));
-        setFlags();
         clearFields();
         setRowDataNull();
     }
@@ -242,7 +241,7 @@ public class ConsultantsTableController implements Initializable {
 
     private void resetChanges() {
         phoneList.add(rowDataConsultantTable.getPhone());
-        setFlags();
+        clearFields();
         setRowDataNull();
     }
 

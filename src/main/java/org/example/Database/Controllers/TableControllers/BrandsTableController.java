@@ -69,7 +69,7 @@ public class BrandsTableController implements Initializable {
 
         hideRstButton();
 
-        setFlags();
+        addFlags();
 
         AddInformation<ResultSet, ObservableList<BrandTable>> information=(brands, data) -> {
             try {
@@ -127,8 +127,9 @@ public class BrandsTableController implements Initializable {
 
             brandString.set(newValue);
 
-            System.out.println(newValue);
+            System.out.println(brandString);
             flagsOnSearch.set(0, brandString.get().equals(emptyString) || brandList.contains(brandString.get()));
+            System.out.println(flagsOnSearch.get(0));
 
             if (rowDataBrandTable != null) {
                 flagsOnChange.set(0,brandString.get().equalsIgnoreCase(rowDataBrandTable.getBrand()));
@@ -170,7 +171,7 @@ public class BrandsTableController implements Initializable {
         return brandTable.getBrand().toLowerCase().contains(brandString.get().toLowerCase());
     }
 
-    private void setFlags() {
+    private void addFlags() {
         for (int i = 0; i < 1; ++i) {
             flagsOnSearch.add(true);
             flagsOnChange.add(false);
@@ -179,7 +180,7 @@ public class BrandsTableController implements Initializable {
 
     void onAddEvent() {
         data.add(databaseHandler.insertAndGetBrand(new BrandTable(brandField.getText())));
-        setFlags();
+        brandList.add(brandField.getText());
         clearFields();
         setRowDataNull();
     }
@@ -194,7 +195,7 @@ public class BrandsTableController implements Initializable {
 
     private void resetChanges() {
         brandList.add(rowDataBrandTable.getBrand());
-        setFlags();
+        clearFields();
         setRowDataNull();
     }
 

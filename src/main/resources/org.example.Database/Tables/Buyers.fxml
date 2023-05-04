@@ -21,7 +21,7 @@
     <TextField fx:id="nameField" layoutX="103.0" layoutY="294.0" prefWidth="110.4000244140625" />
     <TextField fx:id="phoneField" layoutX="214.0" layoutY="294.0" prefWidth="147.20001220703125" />
     <TextField fx:id="emailField" layoutX="362.0" layoutY="294.0" prefWidth="200.79998779296875" />
-    <Button fx:id="addButton" layoutX="595.0" layoutY="294.0" mnemonicParsing="false" text="Add" />
+    <Button fx:id="addButton" disable="true" layoutX="595.0" layoutY="294.0" mnemonicParsing="false" text="Add" />
     <Button fx:id="backButton" layoutX="15.0" layoutY="14.0" mnemonicParsing="false" text="Back" />
    <Label fx:id="messageLabel" alignment="CENTER" contentDisplay="CENTER" layoutX="101.0" layoutY="10.0" prefHeight="58.0" prefWidth="522.0" style="-fx-font-weight: bold;" textAlignment="CENTER">
       <font>

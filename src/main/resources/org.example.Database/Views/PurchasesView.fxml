@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ChoiceBox?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<AnchorPane prefHeight="400.0" prefWidth="610.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.Database.Controllers.ViewControllers.PurchasesViewController">
+    <TableView fx:id="purchaseViewTable" layoutX="71.0" layoutY="75.0" prefHeight="200.0" prefWidth="468.0">
+        <columns>
+            <TableColumn fx:id="idColumn" prefWidth="40.0" text="ID" />
+            <TableColumn fx:id="gadgetColumn" prefWidth="88.0" text="Gadget" />
+            <TableColumn fx:id="dateColumn" prefWidth="115.19999694824219" text="Date" />
+            <TableColumn fx:id="paymentColumn" prefWidth="75.199951171875" text="Payment" />
+            <TableColumn fx:id="buyerColumn" prefWidth="66.4000244140625" text="Buyer" />
+            <TableColumn fx:id="consultantColumn" prefWidth="81.5999755859375" text="Consultant" />
+        </columns>
+    </TableView>
+    <Button fx:id="backButton" layoutX="15.0" layoutY="14.0" mnemonicParsing="false" text="Back" />
+    <ChoiceBox fx:id="paymentBox" layoutX="314.0" layoutY="299.0" prefWidth="75.199951171875" />
+    <ChoiceBox fx:id="gadgetBox" layoutX="111.0" layoutY="299.0" prefWidth="88.0" />
+    <DatePicker fx:id="datePicker" layoutX="199.0" layoutY="299.0" prefWidth="115.19999694824219" />
+    <ChoiceBox fx:id="buyerBox" layoutX="389.0" layoutY="299.0" prefWidth="66.4000244140625" />
+    <ChoiceBox fx:id="consultantBox" layoutX="456.0" layoutY="299.0" prefWidth="81.5999755859375" />
+
+</AnchorPane>
