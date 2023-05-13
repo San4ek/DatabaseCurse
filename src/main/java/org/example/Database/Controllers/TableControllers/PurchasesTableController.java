@@ -70,7 +70,7 @@ public class PurchasesTableController implements Initializable {
     private ChoiceBox<PaymentTable> paymentBox;
 
     @FXML
-    private TableColumn<PurchaseTable, String> paymentColumn;
+    private TableColumn<PurchaseTable, Integer> paymentColumn;
 
     @FXML
     private Button resetButton;
@@ -154,11 +154,11 @@ public class PurchasesTableController implements Initializable {
         paymentColumn.setCellValueFactory(new PropertyValueFactory<>(Purchases.PAYMENT.getTitle()));
         paymentColumn.setCellFactory(param -> new TableCell<>() {
             @Override
-            protected void updateItem(String item, boolean empty) {
+            protected void updateItem(Integer item, boolean empty) {
                 super.updateItem(item, empty);
                 if (item != null) {
-                    setText(item);
-                    setTooltip(new Tooltip(getPaymentByID(Integer.parseInt(item))));
+                    setText(String.valueOf(item));
+                    setTooltip(new Tooltip(getPaymentByID(item)));
                     setOnMouseClicked(event -> {
                         if (event.getButton().name().equals(MouseButton.SECONDARY.name()) && event.getClickCount()==2) {
                             Scenes.PAYMENTS.setScene((Stage) addButton.getScene().getWindow());
@@ -477,7 +477,7 @@ public class PurchasesTableController implements Initializable {
     private void addGadgetsToBox() {
         try {
             while (gadgets.next()) {
-                gadgetTableList.add(new GadgetTable(gadgets.getInt(1), gadgets.getString(2)));
+                gadgetTableList.add(new GadgetTable(gadgets.getInt(1), gadgets.getString(3)));
             }
             gadgetTableList.add(zeroGadgetTable);
             gadgetBox.setItems(gadgetTableList);

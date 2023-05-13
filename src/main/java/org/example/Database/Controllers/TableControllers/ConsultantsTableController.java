@@ -177,7 +177,6 @@ public class ConsultantsTableController implements Initializable {
 
             if (rowDataConsultantTable != null) {
                 flagsOnChange.set(2,ratingValue.get()== rowDataConsultantTable.getRating());
-                System.out.println(flagsOnChange);
             }
 
             filteredData.setPredicate(consultantTable -> isConfidence(consultantTable,nameString,phoneString,ratingValue));

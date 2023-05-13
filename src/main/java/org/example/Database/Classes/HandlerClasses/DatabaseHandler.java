@@ -606,29 +606,17 @@ public class DatabaseHandler {
             prSt.setString(5, String.valueOf(purchaseTable.getConsultant()));
             prSt.executeUpdate();
 
-            resSet = insertPurchaseID(purchaseTable);
-            resSet.afterLast();
-            resSet.previous();
-            purchaseTable.setID(resSet.getInt(1));
+            resSet = selectPurchases();
+            int id=0;
+            while (resSet.next()) {
+                id= resSet.getInt(1);
+            }
+            purchaseTable.setID(id);
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
 
         return purchaseTable;
-    }
-
-    private ResultSet insertPurchaseID(PurchaseTable purchaseTable) {
-        comandString = "SELECT * FROM " + Tables.PURCHASES.getTitle() + " WHERE " + Purchases.DATE.getTitle() + "=?";
-        try {
-            prSt = getConnection().prepareStatement(comandString);
-            prSt.setString(1, String.valueOf(purchaseTable.getDate()));
-
-            resSet = prSt.executeQuery();
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-
-        return resSet;
     }
 
     public ResultSet selectPayments() {
